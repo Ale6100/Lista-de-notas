@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer {
+    * {
+        @apply m-0 p-0;
+    }
+}
+
+.divAddNote.visible {
+    animation: fade-in 0.3s;
+}
+
+@keyframes fade-in {
+    0% {
+        scale: 0;
+        opacity: 0;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
+}
