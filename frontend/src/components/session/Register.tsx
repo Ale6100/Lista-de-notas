@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { PersonalContext } from "../PersonalContext";
-import { sendToast } from "../../utils";
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils";
 import { useNavigate, Link } from "react-router-dom";
 import disabledButton from "../../utils/disabledButton";
 
@@ -32,7 +32,7 @@ const Register = () => {
 
         disabledButton(button, true)
 
-        sendToast("info", "Espere...", 1500)
+        const idToast = loadingToast("Espere....");
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/register`, {
             method: "POST",
@@ -46,11 +46,11 @@ const Register = () => {
         const json = await res.json()
 
         if (json.status === "success") {
-            sendToast("success", "Registro exitoso! Ahora por favor loguéate")
+            sendToastUpdate(idToast, "success", "Registro exitoso! Ahora por favor logueate")
             navigate("/login")
         
         } else if (json.status === "error" && res.status !== 500) {
-            sendToast("error", json.error)
+            sendToastUpdate(idToast, "error", json.error)
             disabledButton(button, false)
         
         } else {

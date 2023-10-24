@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { NoteType, ItemsTypes } from "../../types/note"
-import { sendToast } from "../../utils"
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils"
 import disabledButton from "../../utils/disabledButton"
 
 const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>> }) => {
@@ -40,9 +40,9 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
 
         disabledButton(button, true)
 
-        sendToast("info", "Espere...", 2000)
+        const idToast = loadingToast("Espere....");
 
-        const id = e.currentTarget.id        
+        const id = _id
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/${id}`, {
             method: "POST",
@@ -56,7 +56,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         const json = await res.json()
 
         if (json.status === "success") {
-            sendToast("success", "Nueva nota agregada!")
+            sendToastUpdate(idToast, "success", "Nueva nota agregada!")
             setFormOpen(false)
             setNotas(notas => {
                 return notas.map(nota => {
@@ -77,7 +77,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
             });
 
         } else if (json.status === "error" && res.status !== 500) {
-            sendToast("error", json.error)
+            sendToastUpdate(idToast, "error", json.error)
             disabledButton(button, false)
         
         } else {
@@ -95,11 +95,40 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         )
     }
 
+    const deleteCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const button = e.currentTarget
+        disabledButton(button, true)
+        
+        const idToast = loadingToast("Espere....");
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${_id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
+            }
+        })
+
+        const json = await res.json()
+
+        if (json.status === "success") {
+            sendToastUpdate(idToast, "success", json.message)
+            setNotas(notas => notas.filter(nota => nota._id !== _id));
+        
+        } else if (json.status === "error" && res.status !== 500) {
+            sendToastUpdate(idToast, "error", json.error)    
+        
+        } else {
+            console.error("Error interno")
+        }
+
+        disabledButton(button, false)
+    }
+
     return (
-        <div className="flex flex-col border border-black w-44 h-min">
+        <div className="flex flex-col border border-black w-64 h-min">
             <div className="px-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center h-10">
                 <h3 className="font-semibold text-lg">{title}</h3>
-                <button className="py-1 h-full"><img className="h-full" src="./img/delete.svg" alt="" /></button>
+                <button onClick={deleteCategory} className="py-1 h-full disabled"><img className="h-full" src="./img/delete.svg" alt="" /></button>
             </div>
 
             {
@@ -108,7 +137,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
                 ))
             }
 
-            <form ref={noteRef} onSubmit={addItem} id={_id} className={`divAddCategory ${items.length !== 0 && "border-t border-black"}`}>
+            <form ref={noteRef} onSubmit={addItem} className={`divAddCategory ${items.length !== 0 && "border-t border-black"}`}>
                 {
                     formOpen && <AddItemForm />
                 }

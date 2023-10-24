@@ -4,7 +4,7 @@ import MessageAutenticate from './MessageAutenticate';
 import { NoteType } from '../types/note';
 import Nota from './notes/Note';
 import AddCategory from './notes/AddCategory';
-import DisabledButton from './session/DisabledButton';
+import DisabledButton from './session/LogoutButton';
 
 const Home = () => {
     const personalContext = useContext(PersonalContext);
@@ -27,8 +27,6 @@ const Home = () => {
 
             if (res.status === "success") {
                 setNotas(res.payload)
-                console.log(res.payload);
-                
                 
             } else if (res.status === "error") {
                 console.error("Error interno")

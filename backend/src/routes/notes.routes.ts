@@ -11,6 +11,6 @@ router.post("/:id", notesController.saveOneItem)
 
 router.get("/:id", notesController.getAll)
 
-// router.get("/logout", sessionsController.logout)
+router.delete("/category/:id", notesController.deleteCategory)
 
 export default router

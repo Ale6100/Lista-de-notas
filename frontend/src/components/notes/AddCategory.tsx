@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { sendToast } from "../../utils"
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils"
 import disabledButton from "../../utils/disabledButton"
 import { NoteType } from "../../types/note"
 import { UserInterface } from "../../types/user"
@@ -41,7 +41,7 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
 
         disabledButton(button, true)
 
-        sendToast("info", "Espere...", 1500)
+        const idToast = loadingToast("Espere....");
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?.id}`, {
             method: "POST",
@@ -55,12 +55,12 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
         const json = await res.json()
 
         if (json.status === "success") {
-            sendToast("success", "Nueva categoría agregada!")
+            sendToastUpdate(idToast, "success", "Nueva categoría agregada!")
             setFormOpen(false)
             setNotas(notas => [...notas, { _id: json.payload, title, items: [] }])
 
         } else if (json.status === "error" && res.status !== 500) {
-            sendToast("error", json.error)
+            sendToastUpdate(idToast, "error", json.error)
             disabledButton(button, false)
         
         } else {

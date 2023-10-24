@@ -61,10 +61,29 @@ const saveOneItem = async (req: Request, res: Response) => {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
         return res.status(500).send({ status: "error", error })         
     }
-} 
+}
+
+const deleteCategory = async (req: Request, res: Response) => { // En /api/notes/category/:id con el método DELETE, borra la categoria con el id del params
+    try {
+        const { id } = req.params
+
+        if (!id) {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({ status: "error", error: "Valores incompletos" }) 
+        }
+
+        await Note.deleteById(id)
+        return res.status(200).send({ status: "success", message: "Categoría eliminada" })
+
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error })         
+    }
+}
 
 export default {
     getAll,
     saveOneCategory,
-    saveOneItem
+    saveOneItem,
+    deleteCategory
 }

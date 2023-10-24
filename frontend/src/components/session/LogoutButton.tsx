@@ -1,13 +1,13 @@
 import { UserInterface } from "../../types/user"
-import { sendToast } from "../../utils"
+import { loadingToast, sendToastUpdate } from "../../utils"
 import disabledButton from "../../utils/disabledButton"
 
-const DisabledButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>}) => {
+const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>}) => {
     const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonLogout = e.currentTarget
         disabledButton(buttonLogout, true)
 
-        sendToast("info", "Cerrando sesión...", 2000)
+        const idToast = loadingToast("Cerrando sesión");
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/logout`, {
             method: "GET",
@@ -21,10 +21,10 @@ const DisabledButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAct
     
         if (json.status === "success") {
             setUser(null)
-            sendToast("success", "Sesión cerrada!")
+            sendToastUpdate(idToast, "success", "Sesión cerrada!")
         
         } else {
-            console.error("Error! Intente de nuevo más tarde")
+            sendToastUpdate(idToast, "error", "Error! Intente de nuevo más tarde")
         }
         disabledButton(buttonLogout, false)
     }        
@@ -34,4 +34,4 @@ const DisabledButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAct
     )    
 }
 
-export default DisabledButton
+export default LogoutButton
