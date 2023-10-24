@@ -19,8 +19,8 @@ class NoteContainer {
         await this.model.findOneAndUpdate({_id: id}, {$push: {items: {itemId: idItem, text}}})
     }
     
-    async getAll() { // Devuelve un array con todos los documentos presentes en la colección
-        return await this.model.find({})
+    async getById(id: string) { // Devuelve un array con todos los documentos presentes en la colección
+        return await this.model.find({ idUser: id })
     }
 
     async updateById(id: string, documentoActualizado: UpdateNoteType) { // Actualiza un documento de la colección según su id

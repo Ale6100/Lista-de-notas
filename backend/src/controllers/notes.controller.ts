@@ -6,7 +6,15 @@ const Note = new NoteContainer()
 
 const getAll = async (req: Request, res: Response) => {
     try {
-        const notes = await Note.getAll()
+        const { id } = req.params
+
+        if (!id) {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({status: "error", error: "Valores incompletos"}) 
+        }
+        
+        const notes = await Note.getById(id)
+
         return res.status(200).send({status: "success", payload: notes})        
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
@@ -14,16 +22,18 @@ const getAll = async (req: Request, res: Response) => {
     }
 }
 
-const saveOneCategory = async (req: Request, res: Response) => {
+const saveOneCategory = async (req: Request, res: Response) => { // En /api/notes/category/:id con el método POST, registra una nueva categoria en la base de datos al usuario con el id del params
+    const { id } = req.params
+
     try {
         const { title } = req.body;
 
-        if (!title) {
+        if (!title || !id) {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
             return res.status(400).send({status: "error", error: "Valores incompletos"}) 
         }
 
-        const note = await Note.save({ title, items: [] })
+        const note = await Note.save({ idUser: id, title, items: [] })
         return res.status(200).send({status: "success", payload: note})
 
     } catch (error) {

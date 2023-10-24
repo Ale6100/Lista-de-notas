@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import { PersonalContext } from "../PersonalContext";
 import { Link, useNavigate } from "react-router-dom";
 import { sendToast } from "../../utils";
@@ -11,10 +11,6 @@ const Loggin = () => {
     const { user } = personalContext
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.log("useEffect de Loggin");
-    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

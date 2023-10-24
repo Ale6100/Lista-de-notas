@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react"
 import { sendToast } from "../../utils"
 import disabledButton from "../../utils/disabledButton"
 import { NoteType } from "../../types/note"
+import { UserInterface } from "../../types/user"
 
-const AddCategory = ({ setNotas }: { setNotas: React.Dispatch<React.SetStateAction<NoteType[]>> }) => {
+const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, user: UserInterface | null }) => {
     const [ formOpen, setFormOpen ] = useState(false)
 
     const noteRef = useRef<HTMLFormElement>(null)
@@ -42,7 +43,7 @@ const AddCategory = ({ setNotas }: { setNotas: React.Dispatch<React.SetStateActi
 
         sendToast("info", "Espere...", 1500)
 
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?.id}`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,

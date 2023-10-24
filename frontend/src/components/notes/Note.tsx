@@ -97,7 +97,10 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
 
     return (
         <div className="flex flex-col border border-black w-44 h-min">
-            <h3 className="font-semibold text-center mb-1 border-b-2 border-black border-dashed text-lg">{title}</h3>
+            <div className="px-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center h-10">
+                <h3 className="font-semibold text-lg">{title}</h3>
+                <button className="py-1 h-full"><img className="h-full" src="./img/delete.svg" alt="" /></button>
+            </div>
 
             {
                 items.map(item => (

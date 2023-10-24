@@ -15,8 +15,10 @@ const Home = () => {
     const [ notas, setNotas ] = useState<NoteType[]>([])
     
     useEffect(() => {
-        const traerNotas = async () => {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes`, {
+        const traerNotas = async () => {            
+            if (!user) return null
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/${user?.id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
@@ -27,13 +29,14 @@ const Home = () => {
                 setNotas(res.payload)
                 console.log(res.payload);
                 
+                
             } else if (res.status === "error") {
                 console.error("Error interno")
             }
         }
 
         traerNotas()
-    }, [])
+    }, [user])
 
     if (!user) return <MessageAutenticate />
 
@@ -44,7 +47,7 @@ const Home = () => {
                 <DisabledButton setUser={setUser} />
             </div>
 
-            <AddCategory setNotas={setNotas}/>
+            <AddCategory setNotas={setNotas} user={user} />
             
             <div className='mt-5 flex flex-wrap gap-2 justify-around'>
             {

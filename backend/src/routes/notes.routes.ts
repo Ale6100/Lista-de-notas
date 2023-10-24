@@ -5,11 +5,11 @@ const router = Router();
 
 // router.post("/register", sessionsController.register)
 
-router.post("/category", notesController.saveOneCategory)
+router.post("/category/:id", notesController.saveOneCategory)
 
 router.post("/:id", notesController.saveOneItem)
 
-router.get("/", notesController.getAll)
+router.get("/:id", notesController.getAll)
 
 // router.get("/logout", sessionsController.logout)
 
