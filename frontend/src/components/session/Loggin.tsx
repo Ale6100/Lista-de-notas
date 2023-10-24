@@ -49,12 +49,12 @@ const Loggin = () => {
         })
 
         const json = await res.json()
-
+        
         if (json.status === "success") {
             sendToast("success", json.message)
             navigate("/")
 
-        } else if (json.status === "error") {
+        } else if (json.status === "error" && res.status !== 500) {
             sendToast("error", json.error)
             disabledButton(button, false)
         

@@ -34,20 +34,22 @@ const Register = () => {
 
         sendToast("info", "Espere...", 1500)
 
-        const json = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/register`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/register`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ username, password })
-        }).then(res => res.json())        
+        })
+
+        const json = await res.json()
 
         if (json.status === "success") {
             sendToast("success", "Registro exitoso! Ahora por favor loguéate")
             navigate("/login")
         
-        } else if (json.status === "error") {
+        } else if (json.status === "error" && res.status !== 500) {
             sendToast("error", json.error)
             disabledButton(button, false)
         

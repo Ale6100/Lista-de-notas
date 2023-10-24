@@ -12,8 +12,6 @@ const CheckLogger = () => { // Se encarga de preguntar si el usuario está logue
     const location = useLocation();
 
     useEffect(() => { // Trae la información de un usuario cada vez que cambio de ruta
-        console.log("useEffect de CheckLogger");
-        
         getUser(setUser)
       
     }, [location]);

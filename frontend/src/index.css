@@ -8,7 +8,7 @@
     }
 }
 
-.divAddNote.visible {
+.divAddCategory {
     animation: fade-in 0.3s;
 }
 
@@ -22,4 +22,8 @@
         scale: 1;
         opacity: 1;
     }
+}
+
+.textareaAddItemForm {
+    form-sizing: content;  /* Esta propiedad es nueva, no está en casi ningún navegador. No es un problema si tu navegador no te lo permite */
 }

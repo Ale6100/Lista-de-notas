@@ -1,5 +1,10 @@
-export interface NoteInterface {
-    id: number
-    title: string
-    content: string
+export interface ItemsTypes {
+    itemId: string,
+    text: string
+}
+
+export interface NoteType {
+    _id: string
+    title: string,
+    items: ItemsTypes[]
 }

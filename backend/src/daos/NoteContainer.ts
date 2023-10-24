@@ -14,6 +14,10 @@ class NoteContainer {
         const save_ = await this.model.create(document)
         return save_._id.valueOf()
     }
+
+    async saveItem(id: string, text: string, idItem: string) { // Recibe un documento, lo guarda en la colección, le coloca un id único y devuelve ese id
+        await this.model.findOneAndUpdate({_id: id}, {$push: {items: {itemId: idItem, text}}})
+    }
     
     async getAll() { // Devuelve un array con todos los documentos presentes en la colección
         return await this.model.find({})
