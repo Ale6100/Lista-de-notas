@@ -16,7 +16,7 @@ const Home = () => {
     
     useEffect(() => {
         const traerNotas = async () => {            
-            if (!user) return null
+            if (!user) return null;
 
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/${user?.id}`, {
                 method: "GET",
@@ -41,13 +41,13 @@ const Home = () => {
     return (
         <div className="px-2">
             <div className='flex justify-between my-2 items-center'> 
-                <p>Bienvenido <span className='font-semibold'>{user.username}</span></p>
+                <p>Bienvenido/a <span className='font-semibold'>{user.username}</span></p>
                 <DisabledButton setUser={setUser} />
             </div>
 
             <AddCategory setNotas={setNotas} user={user} />
             
-            <div className='mt-5 flex flex-wrap gap-2 justify-around'>
+            <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
                 notas.length > 0 ? notas.map(nota => (
                     <Nota key={nota._id} {...nota} setNotas={setNotas}/>

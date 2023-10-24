@@ -72,7 +72,7 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
         return (
             <>
             <label htmlFor="form-title" className="text-center block text-gray-700 text-xl font-bold mb-2">Título</label>
-            <input type="text" id="form-title" name="form-title" className="text-center shadow border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+            <input required type="text" id="form-title" name="form-title" className="text-center shadow border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
 
             <button type="submit" className='w-44 mx-auto py-2 px-4 items-center text-white font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600 rounded'>Agregar</button>
             </>

@@ -68,12 +68,12 @@ const Loggin = () => {
             <form onSubmit={handleSubmit} className="mx-auto max-w-lg p-2 flex flex-col border border-black rounded-sm">
                 <div>
                     <label className="mr-2" htmlFor="loggin-username">Nombre de usuario</label>
-                    <input className="px-1 border border-black rounded-sm" type="text" id="loggin-username" name="loggin-username" placeholder="Nombre de usuario" />
+                    <input required className="px-1 border border-black rounded-sm" type="text" id="loggin-username" name="loggin-username" placeholder="Nombre de usuario" />
                 </div>
 
                 <div className="my-5">
                     <label className="mr-2" htmlFor="loggin-password">Contraseña</label>
-                    <input className="px-1 border border-black rounded-sm" type="password" id="loggin-password" name="loggin-password" placeholder="****" />
+                    <input required className="px-1 border border-black rounded-sm" type="password" id="loggin-password" name="loggin-password" placeholder="****" />
                 </div>
 
                 <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Iniciar sesión</button>

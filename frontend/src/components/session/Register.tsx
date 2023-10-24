@@ -67,12 +67,12 @@ const Register = () => {
             <form onSubmit={handleSubmit} className="mx-auto max-w-lg p-2 flex flex-col border border-black rounded-sm">
                 <div>
                     <label className="mr-2" htmlFor="register-username">Nombre de usuario</label>
-                    <input className="px-1 border border-black rounded-sm" type="text" id="register-username" name="register-username" placeholder="Nombre de usuario" />
+                    <input required className="px-1 border border-black rounded-sm" type="text" id="register-username" name="register-username" placeholder="Nombre de usuario" />
                 </div>
 
                 <div className="my-5">
                     <label className="mr-2" htmlFor="register-password">Contraseña</label>
-                    <input className="px-1 border border-black rounded-sm" type="password" id="register-password" name="register-password" placeholder="****" />
+                    <input required className="px-1 border border-black rounded-sm" type="password" id="register-password" name="register-password" placeholder="****" />
                 </div>
 
                 <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Registrarse</button>

@@ -1,7 +1,8 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PersonalContext } from "../PersonalContext";
 import getUser from '../../utils/getUser';
+import { loadingToast, sendToastUpdate } from '../../utils';
 
 const CheckLogger = () => { // Se encarga de preguntar si el usuario está logueado, cada vez que se cambia la url
     const personalContext = useContext(PersonalContext);
@@ -9,11 +10,25 @@ const CheckLogger = () => { // Se encarga de preguntar si el usuario está logue
     
     const { setUser } = personalContext;
 
+    const [ conectado, setConectado ] = useState(false);
+
     const location = useLocation();
 
     useEffect(() => { // Trae la información de un usuario cada vez que cambio de ruta
+        
+        let idToast: number | string = 0
+        if (!conectado) {
+            idToast = loadingToast("Conectando con la base de datos, por favor espere...")
+        }
+
         getUser(setUser)
-      
+        .finally(() => {
+            if (!conectado) {
+                setConectado(true);
+                sendToastUpdate(idToast, "success", "Bienvenido", 2000)
+            }
+        })
+
     }, [location]);
 
     return <></>;

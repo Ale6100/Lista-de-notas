@@ -26,9 +26,9 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
 
         const formData = new FormData(e.currentTarget)
 
-        const text = formData.get("form-text");
+        const text = formData.get("form-text")?.toString().trim();
 
-        if (!text || typeof text !== "string") {
+        if (!text) {
             return sendToast("error", "Por favor, escribe una nota o cancela")
         }
         
@@ -88,7 +88,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
     const AddItemForm = () => {
         return (
             <>
-            <textarea name="form-text" className="textareaAddItemForm shadow w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Escribe una nota"></textarea>
+            <textarea required name="form-text" className="textareaAddItemForm shadow w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Escribe una nota"></textarea>
 
             <button type="submit" className='w-full py-2 px-4 text-white font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
             </>
@@ -125,10 +125,10 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
     }
 
     return (
-        <div className="flex flex-col border border-black w-64 h-min">
-            <div className="px-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center h-10">
-                <h3 className="font-semibold text-lg">{title}</h3>
-                <button onClick={deleteCategory} className="py-1 h-full disabled"><img className="h-full" src="./img/delete.svg" alt="" /></button>
+        <div className="flex flex-col border border-black rounded-sm min-w-[200px] max-w-[256px] h-min">
+            <div className="px-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
+                <h3 className="font-semibold text-lg w-5/6">{title}</h3>
+                <button onClick={deleteCategory} className="py-1 w-1/6"><img className="h-full" src="./img/delete.svg" alt="" /></button>
             </div>
 
             {

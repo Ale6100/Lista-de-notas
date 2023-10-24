@@ -15,12 +15,12 @@ export const sendToast = (type: "error" | "success" | "info", message: string, t
 
 export const loadingToast = (message: string) => toast.loading(message)
 
-export const sendToastUpdate = (id: number | string, type: "error" | "success", message: string) => {
+export const sendToastUpdate = (id: number | string, type: "error" | "success", message: string, autoClose = 5000) => {
     toast.update(id, {
         render: message,
         type,
         position: "top-right",
-        autoClose: 5000,
+        autoClose,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
