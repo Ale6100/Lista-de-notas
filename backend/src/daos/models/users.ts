@@ -11,6 +11,11 @@ const schema = new mongoose.Schema({ // Estructura que tendrá cada documento
     password: {
         type: String,
         required: true     
+    },
+
+    orderCategories: {
+        type: String,
+        default: "less items"
     }
 })
 

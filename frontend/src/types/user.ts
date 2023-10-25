@@ -1,4 +1,5 @@
 export interface UserInterface {
-    id: string;
+    _id: string;
     username: string;
+    orderCategories: "alphabetic" | "reverse alphabetic" | "more items" | "less items"
 }

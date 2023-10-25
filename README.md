@@ -7,8 +7,8 @@ Al igual que en otros proyectos trato de que sea útil para mí y otras personas
 Para ver el estado actual del sitio haz click [aqui](https://lista-de-notas.netlify.app/)
 
 * Archivos README:
-    * [./frontend](./frontend/README.md)
-    * [./backend](./backend/README.md)
+    * [frontend](./frontend/README.md)
+    * [backend](./backend/README.md)
 
 ## Comenzando 🚀
 

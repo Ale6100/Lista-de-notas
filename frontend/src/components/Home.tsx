@@ -5,6 +5,8 @@ import { NoteType } from '../types/note';
 import Nota from './notes/Note';
 import AddCategory from './notes/AddCategory';
 import DisabledButton from './session/LogoutButton';
+import OrderNotes from './notes/OrderNotes';
+import { ordenarCategorias } from '../utils';
 
 const Home = () => {
     const personalContext = useContext(PersonalContext);
@@ -18,15 +20,20 @@ const Home = () => {
         const traerNotas = async () => {            
             if (!user) return null;
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/${user?.id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?._id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
                 }
-            }).then(res => res.json())
+            }).then(res => res.json())            
 
             if (res.status === "success") {
-                setNotas(res.payload)
+
+                const updated_notes = res.payload
+
+                ordenarCategorias(updated_notes, user.orderCategories)
+
+                setNotas(updated_notes)
                 
             } else if (res.status === "error") {
                 console.error("Error interno")
@@ -46,6 +53,8 @@ const Home = () => {
             </div>
 
             <AddCategory setNotas={setNotas} user={user} />
+
+            <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
             
             <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {

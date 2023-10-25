@@ -1,12 +1,9 @@
-// import UserDto from "../dao/DTO/User.dto.js";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
-// import { userService, cartService } from "../services/repositories/services.js"
-// import sendMail from "../services/mailingService.js";
 import { createHash, validatePassword } from "../utils.js";
 import { Request, Response } from "express";
-// import { Email } from "../types/types.js";
 import UserContainer from "../daos/UserContainer.js";
+import { UserType } from "../types/users.js";
 
 const User = new UserContainer()
 
@@ -26,13 +23,14 @@ const register = async (req: Request, res: Response) => { // En /api/sessions/re
         
         const hashedPassword = await createHash(password) // Hashea la contraseña para que no sea visible para nadie
 
-        const usuario = {
+        const usuario: UserType = {
             username,
             password: hashedPassword, // Guardamos en MongoDB el pasword hasheado
+            orderCategories: "less items"
         }
     
         const result = await User.save(usuario)
-        return res.status(200).send({ status: "success", payload: result}) // Enviamos al usuario, dando por hecho que todo salió bien
+        return res.status(200).send({ status: "success", payload: result}) // Enviamos al id del usuario, dando por hecho que todo salió bien
     
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
@@ -63,7 +61,7 @@ const login = async (req: Request, res: Response) => { // En /api/sessions/login
             return res.status(400).send({status: "error", error: "Contraseña inválida"})
         }
     
-        const tokenizedUser = jwt.sign({ id: usuario._id, username }, config.jwt.secret, { expiresIn: "7d" }) // Colocamos la tokenización | Cifra al usuario en un token que expira en 7 días
+        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "7d" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
         return res.cookie(config.jwt.nameCookie, tokenizedUser, {
             httpOnly: true,
             sameSite: "none",
@@ -76,9 +74,12 @@ const login = async (req: Request, res: Response) => { // En /api/sessions/login
     }
 }
 
-const current = async (req: Request, res: Response) => { // En /api/sessions/current con el método GET se obtiene la información del usuario logueado
+const current = async (req: Request, res: Response) => { // En /api/sessions/current con el método GET se obtiene el usuario logueado
     try {
-        const user = req.user ? req.user : null
+        const id = req.idUser ? req.idUser : null
+        
+        const user = await User.getById(id)     
+
         return res.status(200).send({ status: "success", payload: user })        
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
@@ -99,9 +100,29 @@ const logout = async (req: Request, res: Response) => { // En /api/sessions/logo
     }
 }
 
+const changeOrderCategories = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { orderCategories } = req.body
+        
+        if (!id || !orderCategories || typeof orderCategories !== "string") {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({status: "error", error: "Valores incompletos"}) 
+        }
+
+        await User.updateOrderCategories(id, orderCategories)
+        return res.status(200).send({status: "success", message: "Orden cambiado!"})
+
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error: "Error, inténtelo de nuevo más tarde" })
+    }
+}
+
 export default {
     register,
     login,
     current,
     logout,
+    changeOrderCategories
 }

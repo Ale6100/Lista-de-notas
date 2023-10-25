@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { loadingToast, sendToast, sendToastUpdate } from "../../utils"
+import { loadingToast, ordenarCategorias, sendToast, sendToastUpdate } from "../../utils"
 import disabledButton from "../../utils/disabledButton"
 import { NoteType } from "../../types/note"
 import { UserInterface } from "../../types/user"
@@ -43,7 +43,7 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
 
         const idToast = loadingToast("Espere....");
 
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?.id}`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?._id}`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
@@ -57,7 +57,15 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", "Nueva categoría agregada!")
             setFormOpen(false)
-            setNotas(notas => [...notas, { _id: json.payload, title, items: [] }])
+            setNotas(notas => {
+
+                if (user) {
+                    const newArray = [...notas, { _id: json.payload, title, items: [] }]
+                    return ordenarCategorias(newArray, user.orderCategories)
+                } else {
+                    return []
+                }
+            })
 
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)

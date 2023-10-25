@@ -8,6 +8,7 @@ import Creditos from "./components/Creditos";
 import CheckLogger from "./components/session/CheckLogger";
 import PersonalContextProvider from "./components/PersonalContext";
 import Register from "./components/session/Register";
+import Error404 from "./components/Error404";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                             <Route path='/' element={<Home/>}/>
                             <Route path='/login' element={<Loggin/>}/>
                             <Route path='/register' element={<Register/>}/>
+                            <Route path="*" element={<Error404 />} />
                         </Routes>
                     </main>
                 </div>

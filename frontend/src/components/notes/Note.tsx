@@ -35,7 +35,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         const button = e.currentTarget.lastChild
 
         if (!(button instanceof HTMLButtonElement)) {
-            return sendToast("error", "Error interno")
+            return console.error("Error interno")
         }
 
         disabledButton(button, true)
@@ -44,7 +44,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
 
         const id = _id
 
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${id}`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,

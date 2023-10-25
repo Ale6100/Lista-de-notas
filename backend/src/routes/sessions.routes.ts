@@ -11,4 +11,6 @@ router.get("/current", sessionsController.current)
 
 router.get("/logout", sessionsController.logout)
 
+router.put("/changeOrderCategories/:id", sessionsController.changeOrderCategories)
+
 export default router

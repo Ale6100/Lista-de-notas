@@ -65,12 +65,12 @@ const Register = () => {
             <h2 className="my-5 text-2xl text-center font-semibold">Formulario de registro</h2>
 
             <form onSubmit={handleSubmit} className="mx-auto max-w-lg p-3 flex flex-col border border-blue-300 rounded-sm">
-                <div>
+                <div className="flex max-sm:flex-col">
                     <label className="mr-2" htmlFor="register-username">Nombre de usuario</label>
-                    <input required className="text-black px-1 border border-black rounded-sm" type="text" id="register-username" name="register-username" placeholder="Nombre de usuario" />
+                    <input required className="text-black px-1 border border-black rounded-sm" type="text" id="register-username" name="register-username" placeholder="Username" />
                 </div>
 
-                <div className="my-5">
+                <div className="my-5 flex max-sm:flex-col">
                     <label className="mr-2" htmlFor="register-password">Contraseña</label>
                     <input required className="text-black px-1 border border-black rounded-sm" type="password" id="register-password" name="register-password" placeholder="****" />
                 </div>

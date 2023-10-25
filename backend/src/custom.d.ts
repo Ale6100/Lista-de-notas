@@ -1,4 +1,5 @@
 import winston from 'winston';
+import { UserTypeMongo } from './types/users';
 
 declare global {
     interface MyReq {
@@ -7,7 +8,7 @@ declare global {
     }
 
     interface CustomUser {
-        user: UserLogin;
+        idUser: string | jwt.JwtPayload
     }    
 
     namespace Express {

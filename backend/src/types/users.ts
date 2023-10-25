@@ -4,5 +4,6 @@ export interface UserTypeMongo extends UserType {
 
 export interface UserType {
     username: string,
-    password: string
+    password: string,
+    orderCategories: "alphabetic" | "reverse alphabetic" | "more items" | "less items"
 }

@@ -5,9 +5,9 @@ const router = Router();
 
 router.post("/category/:id", notesController.saveOneCategory)
 
-router.post("/:id", notesController.saveOneItem) // Próximamente será /category/item/:id
+router.post("/category/item/:id", notesController.saveOneItem)
 
-router.get("/:id", notesController.getAllNotesById) // Próximamente /category/:id
+router.get("/category/:id", notesController.getAllNotesById)
 
 router.delete("/category/:id", notesController.deleteCategory)
 

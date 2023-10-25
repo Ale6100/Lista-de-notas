@@ -7,8 +7,8 @@ const checkLogger = (req: Request, _res: Response, next: NextFunction) => { // S
     const secret = config.jwt.secret ? config.jwt.secret : ""
 
     try {
-        const user = jwt.verify(token, secret); // Descifra al usuario siempre y cuando el token de la cookie no haya vencido (da error si venció o si no se pasó ningún token)
-        req.user = user; // Define req.user, para poder llamar al usuario actual en cualquier otro req que venga después 
+        const token_ = jwt.verify(token, secret) as { id: string }; // Descifra el id delusuario siempre y cuando el token de la cookie no haya vencido (da error si venció o si no se pasó ningún token)
+        req.idUser = token_.id; // Define req.idUser, para poder llamar al id del usuario actual en cualquier otro req que venga después 
         
     } catch (error) {
         null

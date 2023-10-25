@@ -1,8 +1,4 @@
-import { UserInterface } from "../types/user"
-
-const getUser = async (setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>) => {
-    let user = null
-    
+const getUser = async () => {    
     const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/current`, {
         method: "GET",
         credentials: "include",
@@ -11,10 +7,7 @@ const getUser = async (setUser: React.Dispatch<React.SetStateAction<UserInterfac
         },
     }).then(res => res.json())
 
-    user = result.payload    
-
-    setUser(user)
-    return user
+    return result.payload
 }
 
 export default getUser

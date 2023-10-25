@@ -18,6 +18,14 @@ class UserContainer {
     async getByUsername(username: string) { // Devuelve un documentos según su username
         return await this.model.findOne({ username }) as UserTypeMongo
     }
+
+    async getById(id: string) { // Devuelve un documentos según su id
+        return await this.model.findOne({ _id: id }) as UserTypeMongo
+    }
+
+    async updateOrderCategories(id: string, orderCategories: string) { // Actualiza el orderCategories de un usuario
+        await this.model.updateOne({ _id: id }, { $set: { orderCategories } })
+    }
 }
 
 export default UserContainer

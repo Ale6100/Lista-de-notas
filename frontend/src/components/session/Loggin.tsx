@@ -66,12 +66,12 @@ const Loggin = () => {
             <h2 className="my-5 text-2xl text-center font-semibold">Formulario de logueo</h2>
 
             <form onSubmit={handleSubmit} className="mx-auto max-w-lg p-3 flex flex-col border border-blue-300 rounded-sm">
-                <div>
+                <div className="flex max-sm:flex-col">
                     <label className="mr-2" htmlFor="loggin-username">Nombre de usuario</label>
-                    <input required className="text-black px-1 border border-black rounded-sm" type="text" id="loggin-username" name="loggin-username" placeholder="Nombre de usuario" />
+                    <input required className="text-black px-1 border border-black rounded-sm" type="text" id="loggin-username" name="loggin-username" placeholder="Username" />
                 </div>
 
-                <div className="my-5">
+                <div className="my-5 flex max-sm:flex-col">
                     <label className="mr-2" htmlFor="loggin-password">Contraseña</label>
                     <input required className="text-black px-1 border border-black rounded-sm" type="password" id="loggin-password" name="loggin-password" placeholder="****" />
                 </div>
