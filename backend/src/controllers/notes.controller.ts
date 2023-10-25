@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 const Note = new NoteContainer()
 
-const getAll = async (req: Request, res: Response) => {
+const getAllNotesById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
 
@@ -81,9 +81,29 @@ const deleteCategory = async (req: Request, res: Response) => { // En /api/notes
     }
 }
 
+const deleteOneItem = async (req: Request, res: Response) => { // En /api/notes/:id con el método DELETE, borra el item con el id del params
+    try {
+        const { id } = req.params
+        const { itemId } = req.query
+
+        if (!id || !itemId || typeof itemId !== "string") {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({ status: "error", error: "Valores incompletos" }) 
+        }
+        
+        await Note.deleteItem(id, itemId)
+        return res.status(200).send({ status: "success", message: "Nota eliminada" })
+        
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error })         
+    }        
+}
+
 export default {
-    getAll,
+    getAllNotesById,
     saveOneCategory,
     saveOneItem,
-    deleteCategory
+    deleteCategory,
+    deleteOneItem,
 }

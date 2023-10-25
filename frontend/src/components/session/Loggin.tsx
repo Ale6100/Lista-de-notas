@@ -17,8 +17,8 @@ const Loggin = () => {
 
         const formData = new FormData(e.currentTarget);
 
-        const username = formData.get("loggin-username");
-        const password = formData.get("loggin-password");
+        const username = formData.get("loggin-username")?.toString().trim();
+        const password = formData.get("loggin-password")?.toString().trim();
         
         if (!username || !password) {
             return sendToast("error", "Debe rellenar todos los campos")
@@ -65,21 +65,21 @@ const Loggin = () => {
         <section className="w-full flex flex-col">
             <h2 className="my-5 text-2xl text-center font-semibold">Formulario de logueo</h2>
 
-            <form onSubmit={handleSubmit} className="mx-auto max-w-lg p-2 flex flex-col border border-black rounded-sm">
+            <form onSubmit={handleSubmit} className="mx-auto max-w-lg p-3 flex flex-col border border-blue-300 rounded-sm">
                 <div>
                     <label className="mr-2" htmlFor="loggin-username">Nombre de usuario</label>
-                    <input required className="px-1 border border-black rounded-sm" type="text" id="loggin-username" name="loggin-username" placeholder="Nombre de usuario" />
+                    <input required className="text-black px-1 border border-black rounded-sm" type="text" id="loggin-username" name="loggin-username" placeholder="Nombre de usuario" />
                 </div>
 
                 <div className="my-5">
                     <label className="mr-2" htmlFor="loggin-password">Contraseña</label>
-                    <input required className="px-1 border border-black rounded-sm" type="password" id="loggin-password" name="loggin-password" placeholder="****" />
+                    <input required className="text-black px-1 border border-black rounded-sm" type="password" id="loggin-password" name="loggin-password" placeholder="****" />
                 </div>
 
                 <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Iniciar sesión</button>
             </form>
 
-            <p className="mx-auto mt-4">No tienes una cuenta? <Link className="text-blue-700" to="/register">Regístrate</Link></p>
+            <p className="mx-auto mt-4">No tienes una cuenta? <Link className="text-blue-300" to="/register">Regístrate</Link></p>
         </section>
     )
 }

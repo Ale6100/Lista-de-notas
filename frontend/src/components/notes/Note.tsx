@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { NoteType, ItemsTypes } from "../../types/note"
-import { loadingToast, sendToast, sendToastUpdate } from "../../utils"
+import { loadingToast, sendToast, sendToastUpdate, swalSeguro } from "../../utils"
 import disabledButton from "../../utils/disabledButton"
 
 const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>> }) => {
@@ -70,7 +70,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
                             ...nota,
                             items: updatedItems
                         };
-                    } else { // No debería suceder nunca esto, pero por si acaso
+                    } else {
                         return nota;
                     }
                 });
@@ -90,13 +90,17 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
             <>
             <textarea required name="form-text" className="textareaAddItemForm shadow w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Escribe una nota"></textarea>
 
-            <button type="submit" className='w-full py-2 px-4 text-white font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
+            <button type="submit" className='w-full py-2 px-4 text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
             </>
         )
     }
 
     const deleteCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const button = e.currentTarget
+
+        const respuesta = await swalSeguro()
+        if (!respuesta) return        
+
         disabledButton(button, true)
         
         const idToast = loadingToast("Espere....");
@@ -124,16 +128,67 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         disabledButton(button, false)
     }
 
+    const deleteItem = async (e: React.MouseEvent<HTMLButtonElement>, itemId: string) => {
+        
+        const button = e.currentTarget
+
+        const respuesta = await swalSeguro()
+        if (!respuesta) return
+
+        disabledButton(button, true)
+
+        const idToast = loadingToast("Espere....");
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${_id}?itemId=${itemId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
+            }
+        })
+
+        const json = await res.json()
+
+        if (json.status === "success") {
+            sendToastUpdate(idToast, "success", json.message)
+
+            setNotas(notas => {
+                return notas.map(nota => {
+                    if (nota._id === _id) {
+                        const updatedItems = nota.items.filter(item => item.itemId !== itemId);
+
+                        return {
+                            ...nota,
+                            items: updatedItems
+                        };
+                    } else {
+                        return nota;
+                    }
+                });
+            });            
+
+        } else if (json.status === "error" && res.status !== 500) {
+            sendToastUpdate(idToast, "error", json.error)
+            
+        } else {
+            console.error("Error interno")
+        }
+
+        disabledButton(button, false)
+    }
+
     return (
-        <div className="flex flex-col border border-black rounded-sm min-w-[200px] max-w-[256px] h-min">
+        <div className="flex flex-col border border-blue-300 p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800">
             <div className="px-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
-                <h3 className="font-semibold text-lg w-5/6">{title}</h3>
-                <button onClick={deleteCategory} className="py-1 w-1/6"><img className="h-full" src="./img/delete.svg" alt="" /></button>
+                <h3 className="font-semibold text-base w-full">{title}</h3>
+                <button onClick={deleteCategory} className="w-10"><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
             </div>
 
             {
                 items.map(item => (
-                    <p className="px-1" key={item.itemId}>• {item.text}</p>
+                    <div key={item.itemId} className="mb-2 p-1 flex justify-between items-center bg-slate-800 text-white">
+                        <p className="mr-1 w-full text-sm">{item.text}</p>
+                        <button onClick={e => deleteItem(e, item.itemId)} className="w-8"><img className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
+                    </div>
                 ))
             }
 
@@ -143,7 +198,7 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
                 }
             </form>
 
-            <button onClick={() => setFormOpen(!formOpen)} className={`w-full mx-auto h-7 px-4 items-center text-white font-semibold ${formOpen ? "bg-red-500 hover:bg-red-700 active:bg-red-600" : "bg-green-500 hover:bg-green-700 active:bg-green-600"}`}>{formOpen ? "Cancelar" : "Agregar nota"}</button>
+            <button onClick={() => setFormOpen(!formOpen)} className={`w-full mx-auto h-7 px-4 items-center text-black font-semibold ${formOpen ? "bg-red-500 hover:bg-red-700 active:bg-red-600" : "bg-green-500 hover:bg-green-700 active:bg-green-600"}`}>{formOpen ? "Cancelar" : "Agregar nota"}</button>
         </div>
     )
 }

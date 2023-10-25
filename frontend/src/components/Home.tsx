@@ -40,7 +40,7 @@ const Home = () => {
 
     return (
         <div className="px-2">
-            <div className='flex justify-between my-2 items-center'> 
+            <div className='flex justify-between mb-2 items-center'> 
                 <p>Bienvenido/a <span className='font-semibold'>{user.username}</span></p>
                 <DisabledButton setUser={setUser} />
             </div>

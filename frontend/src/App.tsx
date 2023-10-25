@@ -14,17 +14,18 @@ function App() {
         <>
         <PersonalContextProvider>
             <BrowserRouter>
-                <NavBar/>
-                <CheckLogger/>
+                <div className="flex flex-col min-h-screen">
+                    <NavBar/>
+                    <CheckLogger/>
 
-                <main className="px-2">
-                    <Routes>
-                        <Route path='/' element={<Home/>}/>
-                        <Route path='/login' element={<Loggin/>}/>
-                        <Route path='/register' element={<Register/>}/>
-                    </Routes>
-                </main>
-
+                    <main className="p-2 bg-slate-900 text-white flex-1">
+                        <Routes>
+                            <Route path='/' element={<Home/>}/>
+                            <Route path='/login' element={<Loggin/>}/>
+                            <Route path='/register' element={<Register/>}/>
+                        </Routes>
+                    </main>
+                </div>
                 <Creditos/>
             </BrowserRouter>
             <ToastContainer />
