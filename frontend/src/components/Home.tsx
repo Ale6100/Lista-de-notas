@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { PersonalContext } from './PersonalContext';
 import MessageAutenticate from './MessageAutenticate';
 import { NoteType } from '../types/note';
-import Nota from './notes/Note';
+import Note from './notes/Note';
 import AddCategory from './notes/AddCategory';
 import DisabledButton from './session/LogoutButton';
 import OrderNotes from './notes/OrderNotes';
@@ -52,7 +52,7 @@ const Home = () => {
                 <DisabledButton setUser={setUser} />
             </div>
 
-            <AddCategory setNotas={setNotas} user={user} />
+            <AddCategory setNotas={setNotas} user={user} setUser={setUser} />
 
             {
                 notas.length > 0 && <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
@@ -61,7 +61,7 @@ const Home = () => {
             <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
                 notas.length > 0 ? notas.map(nota => (
-                    <Nota key={nota._id} {...nota} setNotas={setNotas}/>
+                    <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser}/>
                 )) :
 
                 <p>Todavía no hay notas! agrega las que desees</p>

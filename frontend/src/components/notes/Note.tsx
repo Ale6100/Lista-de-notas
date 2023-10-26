@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { NoteType, ItemsTypes } from "../../types/note"
-import { loadingToast, sendToast, sendToastUpdate, swalSeguro } from "../../utils"
+import { loadingToast, sendToast, sendToastUpdate, swalSeguro } from "../../utils/toast"
 import disabledButton from "../../utils/disabledButton"
+import { checkLogger } from "../../utils/checkLogger"
+import getUser from "../../utils/getUser"
+import { UserInterface } from "../../types/user"
 
-const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>> }) => {
+const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
     const [ formOpen, setFormOpen ] = useState(false)
 
     const noteRef = useRef<HTMLFormElement>(null)
@@ -25,14 +28,16 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         e.preventDefault()
 
         const formData = new FormData(e.currentTarget)
+        const button = e.currentTarget.lastChild
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) return null;
 
         const text = formData.get("form-text")?.toString().trim();
 
         if (!text) {
             return sendToast("error", "Por favor, escribe una nota o cancela")
         }
-        
-        const button = e.currentTarget.lastChild
 
         if (!(button instanceof HTMLButtonElement)) {
             return console.error("Error interno")
@@ -99,7 +104,9 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         const button = e.currentTarget
 
         const respuesta = await swalSeguro()
-        if (!respuesta) return        
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected || !respuesta) return null; 
 
         disabledButton(button, true)
         
@@ -133,7 +140,9 @@ const Nota = ({ _id, title, items, setNotas }: { _id: string, title: string, ite
         const button = e.currentTarget
 
         const respuesta = await swalSeguro()
-        if (!respuesta) return
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected || !respuesta) return null; 
 
         disabledButton(button, true)
 

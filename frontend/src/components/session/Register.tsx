@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { PersonalContext } from "../PersonalContext";
-import { loadingToast, sendToast, sendToastUpdate } from "../../utils";
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast";
 import { useNavigate, Link } from "react-router-dom";
 import disabledButton from "../../utils/disabledButton";
 

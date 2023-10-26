@@ -1,5 +1,5 @@
 import { UserInterface } from "../../types/user"
-import { loadingToast, sendToastUpdate } from "../../utils"
+import { loadingToast, sendToastUpdate } from "../../utils/toast"
 import disabledButton from "../../utils/disabledButton"
 
 const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>}) => {

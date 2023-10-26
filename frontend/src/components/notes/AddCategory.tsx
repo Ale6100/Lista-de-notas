@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react"
-import { loadingToast, ordenarCategorias, sendToast, sendToastUpdate } from "../../utils"
+import { ordenarCategorias } from "../../utils"
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast"
 import disabledButton from "../../utils/disabledButton"
 import { NoteType } from "../../types/note"
 import { UserInterface } from "../../types/user"
+import { checkLogger } from "../../utils/checkLogger"
+import getUser from "../../utils/getUser"
 
-const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, user: UserInterface | null }) => {
+const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, user: UserInterface | null, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
     const [ formOpen, setFormOpen ] = useState(false)
 
     const noteRef = useRef<HTMLFormElement>(null)
@@ -26,14 +29,16 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
         e.preventDefault()
 
         const formData = new FormData(e.currentTarget)
+        const button = e.currentTarget.lastChild
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) return null
 
         const title = formData.get("form-title")?.toString().trim();
 
         if (!title || typeof title !== "string") {
             return sendToast("error", "Por favor, escribe un título para la nueva categoría")
         }
-
-        const button = e.currentTarget.lastChild
 
         if (!(button instanceof HTMLButtonElement)) {
             return sendToast("error", "Error interno")
@@ -82,7 +87,7 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
             <label htmlFor="form-title" className="text-center block text-white text-xl font-bold mb-2">Título</label>
             <input required type="text" id="form-title" name="form-title" className="text-center shadow border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
 
-            <button type="submit" className='w-44 mx-auto py-2 px-4 items-center text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600 rounded'>Agregar</button>
+            <button type="submit" className='w-full mx-auto py-2 px-4 items-center text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600 rounded'>Agregar</button>
             </>
         )
     }

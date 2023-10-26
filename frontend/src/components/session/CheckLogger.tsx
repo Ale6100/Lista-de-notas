@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PersonalContext } from "../PersonalContext";
 import getUser from '../../utils/getUser';
-import { loadingToast, sendToastUpdate } from '../../utils';
+import { loadingToast, sendToastUpdate } from '../../utils/toast';
 import { UserInterface } from '../../types/user';
 
 const CheckLogger = () => { // Se encarga de preguntar si el usuario está logueado, cada vez que se cambia la url

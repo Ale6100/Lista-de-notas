@@ -1,6 +1,8 @@
 import { UserInterface } from "../../types/user";
-import { loadingToast, sendToast, sendToastUpdate } from "../../utils";
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast";
 import disabledButton from "../../utils/disabledButton";
+import { checkLogger } from "../../utils/checkLogger";
+import getUser from "../../utils/getUser";
 
 const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserInterface["orderCategories"], setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>, _id: string }) => {
     
@@ -8,6 +10,10 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
         e.preventDefault()
 
         const formData = new FormData(e.currentTarget);
+        const button = e.currentTarget.lastChild
+        
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) return null;
 
         const orderCategories = formData.get("select")?.toString().trim() as UserInterface["orderCategories"];
 
@@ -15,8 +21,6 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
             console.error("Error inteno");
             return sendToast("error", "Error, selecciona una opción")
         }
-        
-        const button = e.currentTarget.lastChild
 
         if (!(button instanceof HTMLButtonElement)) {
             return console.error("Error interno")

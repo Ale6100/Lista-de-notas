@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { PersonalContext } from "../PersonalContext";
 import { Link, useNavigate } from "react-router-dom";
-import { loadingToast, sendToast, sendToastUpdate } from "../../utils";
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast";
 import disabledButton from "../../utils/disabledButton";
 
 const Loggin = () => {
