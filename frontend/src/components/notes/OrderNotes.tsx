@@ -60,7 +60,7 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
     }
 
     return (
-        <form onSubmit={handleSubmit} className="flex">
+        <form onSubmit={handleSubmit} className="flex my-5">
             <label className="mr-2 rounded" htmlFor="OrderNotes-select">Ordenar por</label>
             
             <select className="text-black" name="select" defaultValue={orderCategories} id="OrderNotes-select">
@@ -68,6 +68,8 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
                 <option value="reverse alphabetic">Alfabético inverso</option>
                 <option value="more items">Más elementos</option>
                 <option value="less items">Menos elementos</option>
+                <option value="date">Fecha ↓</option>
+                <option value="reverse date">Fecha ↑</option>
             </select>
 
             <button className="px-1 ml-2 rounded bg-green-500 hover:bg-green-700 active:bg-green-600" type="submit">OK</button>

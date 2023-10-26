@@ -33,8 +33,10 @@ const saveOneCategory = async (req: Request, res: Response) => { // En /api/note
             return res.status(400).send({status: "error", error: "Valores incompletos"}) 
         }
 
-        const note = await Note.save({ idUser: id, title, items: [] })
-        return res.status(200).send({status: "success", payload: note})
+        const timestamp = Date.now()
+
+        const id_note = await Note.save({ idUser: id, title, items: [], timestamp })
+        return res.status(200).send({status: "success", payload: { id: id_note, timestamp }})
 
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)

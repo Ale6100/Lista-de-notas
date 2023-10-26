@@ -60,7 +60,7 @@ const AddCategory = ({ setNotas, user }: { setNotas: React.Dispatch<React.SetSta
             setNotas(notas => {
 
                 if (user) {
-                    const newArray = [...notas, { _id: json.payload, title, items: [] }]
+                    const newArray = [...notas, { _id: json.payload.id, title, items: [], timestamp: json.payload.timestamp }]
                     return ordenarCategorias(newArray, user.orderCategories)
                 } else {
                     return []

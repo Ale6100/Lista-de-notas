@@ -26,6 +26,11 @@ const schema = new mongoose.Schema({ // Estructura que tendrá cada documento
             }
         ],
         required: true,
+    },
+
+    timestamp: {
+        type: Number,
+        required: true
     }
 })
 

@@ -54,7 +54,9 @@ const Home = () => {
 
             <AddCategory setNotas={setNotas} user={user} />
 
-            <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
+            {
+                notas.length > 0 && <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
+            }
             
             <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {

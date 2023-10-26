@@ -94,6 +94,26 @@ export const ordenarCategorias = (arrayCategorias: NoteType[], orderCategories: 
             }
             return 0
         })
+
+    } else if (orderCategories === "date") {
+        arrayCategorias.sort((a: NoteType, b: NoteType) => {
+            if (a.timestamp > b.timestamp) {
+                return -1
+            } else if (a.timestamp < b.timestamp) {
+                return 1
+            }
+            return 0
+        })
+
+    } else if (orderCategories === "reverse date") {
+        arrayCategorias.sort((a: NoteType, b: NoteType) => {
+            if (a.timestamp < b.timestamp) {
+                return -1
+            } else if (a.timestamp > b.timestamp) {
+                return 1
+            }
+            return 0
+        })
     } else {        
         console.error("Error interno");
     }

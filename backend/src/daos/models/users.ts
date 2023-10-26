@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({ // Estructura que tendrá cada documento
 
     orderCategories: {
         type: String,
-        default: "less items"
+        required: true
     }
 })
 

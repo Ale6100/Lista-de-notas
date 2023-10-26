@@ -26,7 +26,7 @@ const register = async (req: Request, res: Response) => { // En /api/sessions/re
         const usuario: UserType = {
             username,
             password: hashedPassword, // Guardamos en MongoDB el pasword hasheado
-            orderCategories: "less items"
+            orderCategories: "date"
         }
     
         const result = await User.save(usuario)

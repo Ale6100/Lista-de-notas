@@ -5,5 +5,5 @@ export interface UserTypeMongo extends UserType {
 export interface UserType {
     username: string,
     password: string,
-    orderCategories: "alphabetic" | "reverse alphabetic" | "more items" | "less items"
+    orderCategories: "alphabetic" | "reverse alphabetic" | "more items" | "less items" | "date" | "reverse date"
 }

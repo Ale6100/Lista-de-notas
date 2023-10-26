@@ -6,5 +6,6 @@ export interface ItemsTypes {
 export interface NoteType {
     _id: string
     title: string,
-    items: ItemsTypes[]
+    items: ItemsTypes[],
+    timestamp: number
 }
