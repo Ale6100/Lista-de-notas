@@ -82,11 +82,13 @@ const Home = () => {
 
         const idToast = loadingToast("Eliminando usuario...");
         
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/deleteUser/${user?._id}?password=${password}&username=${user?.username}`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/deleteUser/${user?._id}?username=${user?.username}`, {
             method: "DELETE",
             headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
-            }
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ password })
         })
 
         const json = await res.json()

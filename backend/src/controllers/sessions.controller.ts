@@ -124,7 +124,8 @@ const changeOrderCategories = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params
-        const { password, username } = req.query
+        const { username } = req.query
+        const { password } = req.body        
 
         if (!userId || !password || !username) {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
