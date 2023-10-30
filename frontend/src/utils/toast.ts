@@ -41,11 +41,13 @@ export const sendToastUpdate = (id: number | string, type: "error" | "success", 
 export const swalSeguro = async () => {
     return await Swal.fire({
         title: '¿Estás seguro?',
-        text: "No podrás reverlo!",
+        text: "No podrás revertirlo!",
         icon: 'warning',
         showCancelButton: true,
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminar!'
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Si, eliminar!',
+        confirmButtonColor: '#3085d6',
     }).then((result) => {
         return result.isConfirmed
     })

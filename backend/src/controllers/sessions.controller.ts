@@ -3,9 +3,11 @@ import config from "../config/config.js";
 import { createHash, validatePassword } from "../utils.js";
 import { Request, Response } from "express";
 import UserContainer from "../daos/UserContainer.js";
+import NoteContainer from "../daos/NoteContainer.js";
 import { UserType } from "../types/users.js";
 
 const User = new UserContainer()
+const Note = new NoteContainer()
 
 const register = async (req: Request, res: Response) => { // En /api/sessions/register con el método POST, registra a un usuario en la base de datos
     try {        
@@ -61,7 +63,7 @@ const login = async (req: Request, res: Response) => { // En /api/sessions/login
             return res.status(400).send({status: "error", error: "Contraseña inválida"})
         }
     
-        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "7d" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
+        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "10s" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
         return res.cookie(config.jwt.nameCookie, tokenizedUser, {
             httpOnly: true,
             sameSite: "none",
@@ -119,10 +121,45 @@ const changeOrderCategories = async (req: Request, res: Response) => {
     }
 }
 
+const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params
+        const { password, username } = req.query
+
+        if (!userId || !password || !username) {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
+        }
+
+        if (typeof userId !== "string" || typeof password !== "string" || typeof username !== "string") {
+            req.logger.error(`${req.infoPeticion} | Incorrect values`)
+            return res.status(400).send({ status: "error", error: "Valores incorrectos" })
+        }
+
+        const usuario = await User.getByUsername(username)
+        
+        const isValidPassword = await validatePassword(usuario, password)
+
+        if (!isValidPassword) {
+            req.logger.error(`${req.infoPeticion} | Contraseña inválida`)
+            return res.status(400).send({status: "error", error: "Contraseña inválida"})
+        }
+
+        await User.deleteById(userId) // Elimina al usuario y a todas las notas que haya creado
+        await Note.deleteByUserId(userId)
+
+        return res.status(200).send({ status: "success", message: "Usuario eliminado" })
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error: "Error, inténtelo de nuevo más tarde" })
+    }
+}
+
 export default {
     register,
     login,
     current,
     logout,
-    changeOrderCategories
+    changeOrderCategories,
+    deleteUser
 }

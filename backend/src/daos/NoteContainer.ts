@@ -31,6 +31,10 @@ class NoteContainer {
         await this.model.deleteOne({_id: id})
     }
 
+    async deleteByUserId(id: string) {
+        await this.model.deleteMany({ idUser: id })
+    }
+
     async deleteItem(id: string, idItem: string) { // Elimina de la base de datos al item con el id solicitado
         await this.model.findOneAndUpdate({_id: id}, {$pull: {items: {itemId: idItem}}})
     }

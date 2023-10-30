@@ -26,6 +26,10 @@ class UserContainer {
     async updateOrderCategories(id: string, orderCategories: string) { // Actualiza el orderCategories de un usuario
         await this.model.updateOne({ _id: id }, { $set: { orderCategories } })
     }
+
+    async deleteById(id: string) { // Elimina de la base de datos al documento con el id solicitado
+        await this.model.deleteOne({ _id: id })
+    }
 }
 
 export default UserContainer

@@ -4,9 +4,14 @@ import MessageAutenticate from './MessageAutenticate';
 import { NoteType } from '../types/note';
 import Note from './notes/Note';
 import AddCategory from './notes/AddCategory';
-import DisabledButton from './session/LogoutButton';
+import LogoutButton from './session/LogoutButton';
 import OrderNotes from './notes/OrderNotes';
 import { ordenarCategorias } from '../utils';
+import Swal from 'sweetalert2';
+import { loadingToast, sendToast, sendToastUpdate } from '../utils/toast';
+import disabledButton from '../utils/disabledButton';
+import { checkLogger } from '../utils/checkLogger';
+import getUser from '../utils/getUser';
 
 const Home = () => {
     const personalContext = useContext(PersonalContext);
@@ -43,13 +48,80 @@ const Home = () => {
         traerNotas()
     }, [user])
 
+    const handleDeleteAccount = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const buttonDelete = e.currentTarget
+
+        const alert = await Swal.fire({
+            title: '¿Desea eliminar permanentemente su usuario?',
+            icon: 'warning',
+            input: 'password',
+            inputLabel: 'Ingrese su contraseña',
+            inputPlaceholder: '****',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Eliminar',
+            inputValidator: (value) => {
+                if (!value) return 'Debe rellenar todos los campos'
+            }
+        })
+
+        if (!alert.isConfirmed) return null
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) return null
+
+        const password = alert.value
+
+        if (!password) {
+            return sendToast("error", "Debe rellenar todos los campos")
+        }
+
+        disabledButton(buttonDelete, true)
+
+        const idToast = loadingToast("Eliminando usuario");
+        
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/logout`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
+            }
+        })
+        
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/deleteUser/${user?._id}?password=${password}&username=${user?.username}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
+            }
+        })
+
+        const json = await res.json()
+        
+        if (json.status === "success") {
+            sendToastUpdate(idToast, "success", json.message)
+            setUser(null)
+        
+        } else if (json.status === "error" && res.status !== 500) {
+            sendToastUpdate(idToast, "error", json.error)
+        
+        } else {
+            console.error("Error interno")
+        }
+        disabledButton(buttonDelete, false)
+    }
+
     if (!user) return <MessageAutenticate />
 
     return (
         <div className="px-2">
             <div className='flex justify-between mb-2 items-center'> 
                 <p>Bienvenido/a <span className='font-semibold'>{user.username}</span></p>
-                <DisabledButton setUser={setUser} />
+                <div>
+                    <LogoutButton setUser={setUser} />
+                    <button onClick={handleDeleteAccount} className='ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Eliminar cuenta</button>        
+                </div>
             </div>
 
             <AddCategory setNotas={setNotas} user={user} setUser={setUser} />
