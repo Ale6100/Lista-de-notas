@@ -63,7 +63,7 @@ const login = async (req: Request, res: Response) => { // En /api/sessions/login
             return res.status(400).send({status: "error", error: "Contraseña inválida"})
         }
     
-        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "10s" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
+        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "7d" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
         return res.cookie(config.jwt.nameCookie, tokenizedUser, {
             httpOnly: true,
             sameSite: "none",
@@ -148,7 +148,11 @@ const deleteUser = async (req: Request, res: Response) => {
         await User.deleteById(userId) // Elimina al usuario y a todas las notas que haya creado
         await Note.deleteByUserId(userId)
 
-        return res.status(200).send({ status: "success", message: "Usuario eliminado" })
+        return res.clearCookie(config.jwt.nameCookie, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+        }).status(200).send({ status: "success", message: "Usuario eliminado" })
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
         return res.status(500).send({ status: "error", error: "Error, inténtelo de nuevo más tarde" })

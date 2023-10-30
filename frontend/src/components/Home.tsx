@@ -80,15 +80,7 @@ const Home = () => {
 
         disabledButton(buttonDelete, true)
 
-        const idToast = loadingToast("Eliminando usuario");
-        
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/logout`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
-            }
-        })
+        const idToast = loadingToast("Eliminando usuario...");
         
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/deleteUser/${user?._id}?password=${password}&username=${user?.username}`, {
             method: "DELETE",
