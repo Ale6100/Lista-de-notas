@@ -1,11 +1,11 @@
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
-export const sendToast = (type: "error" | "success" | "info", message: string, timeout = 5000) => {
+export const sendToast = (type: "error" | "success" | "info", message: string, timeout = 4000) => {
     toast[type](message, {
         position: "top-right",
         autoClose: timeout,
-        hideProgressBar: timeout ===  5000 ? false : true,
+        hideProgressBar: timeout ===  4000 ? false : true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -22,7 +22,7 @@ export const loadingToast = (message: string) => toast.loading(message, {
     draggable: true,
 })
 
-export const sendToastUpdate = (id: number | string, type: "error" | "success", message: string, autoClose = 5000) => {
+export const sendToastUpdate = (id: number | string, type: "error" | "success", message: string, autoClose = 4000) => {
     toast.update(id, {
         render: message,
         type,

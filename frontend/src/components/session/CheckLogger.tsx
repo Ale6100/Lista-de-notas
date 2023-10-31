@@ -30,6 +30,7 @@ const CheckLogger = () => { // Se encarga de preguntar si el usuario está logue
             if (!conectado) {
                 setConectado(true);
                 sendToastUpdate(idToast, "success", "Bienvenido", 2000)
+                console.clear()
             }            
         })
 
