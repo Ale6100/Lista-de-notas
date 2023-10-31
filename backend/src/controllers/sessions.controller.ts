@@ -63,7 +63,7 @@ const login = async (req: Request, res: Response) => { // En /api/sessions/login
             return res.status(400).send({ status: "error", error: "Contraseña inválida" })
         }
     
-        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "10s" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
+        const tokenizedUser = jwt.sign({ id: usuario._id }, config.jwt.secret, { expiresIn: "7d" }) // Colocamos la tokenización | Cifra al id del usuario en un token que expira en 7 días
         return res.cookie(config.jwt.nameCookie, tokenizedUser, {
             httpOnly: true,
             sameSite: "none",
