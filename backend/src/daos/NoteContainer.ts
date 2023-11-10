@@ -27,6 +27,10 @@ class NoteContainer {
         await this.model.updateOne({_id: id}, {$set: {...documentoActualizado}})
     }
 
+    async updateTitleCategory(id: string, title: string) { // Actualiza el title de una categoria
+        await this.model.updateOne({_id: id}, {$set: {title}})    
+    }
+
     async deleteById(id: string) { // Elimina de la base de datos al documento con el id solicitado
         await this.model.deleteOne({_id: id})
     }

@@ -5,6 +5,7 @@ import disabledButton from "../../utils/disabledButton"
 import { checkLogger } from "../../utils/checkLogger"
 import getUser from "../../utils/getUser"
 import { UserInterface } from "../../types/user"
+import Swal from "sweetalert2"
 
 const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
     const [ formOpen, setFormOpen ] = useState(false)
@@ -185,11 +186,75 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         disabledButton(button, false)
     }
 
+    const changeTitle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const button = e.currentTarget
+
+        disabledButton(button, true)
+
+        const { value } = await Swal.fire({
+            title: 'Cambiar título',
+            input: "text",
+            text: `Por favor, proporcione un nuevo titulo (valor anterior, ${title})`,
+            inputValidator: (value) => {
+                if (!value) return "Coloque un valor válido!"
+            },
+            icon: 'info',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Cambiar',
+            confirmButtonColor: '#3085d6',
+        })
+
+        if (!value) {
+            return disabledButton(button, false)
+        }
+
+        const idToast = loadingToast("Espere....");
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${_id}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                title: value
+            }),
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
+                "Content-Type": "application/json"
+            }
+        })
+
+        const json = await res.json()
+
+        if (json.status === "success") {
+            sendToastUpdate(idToast, "success", json.message)
+            setNotas(notas =>notas.map(nota => {
+                if (nota._id === _id) {
+                    return {
+                        ...nota,
+                        title: value
+                    }
+                } else {
+                    return nota
+                }
+            }))
+        } else if (json.status === "error" && res.status !== 500) {
+            sendToastUpdate(idToast, "error", json.error)
+        
+        } else {
+            console.error("Error interno")
+        }
+
+        disabledButton(button, false)
+    }
+
     return (
         <div className="flex flex-col border border-blue-300 p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800">
-            <div className="px-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
+            <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
                 <h3 className="font-semibold text-base w-full">{title}</h3>
-                <button onClick={deleteCategory} className="w-10"><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
+                <div className="w-20 flex">
+                    <button onClick={changeTitle} className="mr-1"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
+                    <button onClick={deleteCategory}><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
+                </div>
             </div>
 
             {

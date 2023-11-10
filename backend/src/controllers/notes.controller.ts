@@ -65,6 +65,25 @@ const saveOneItem = async (req: Request, res: Response) => {
     }
 }
 
+const changeTitleCategory = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { title } = req.body
+
+        if (!id || !title || typeof title !== "string") {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
+        }
+
+        await Note.updateTitleCategory(id, title)
+
+        return res.status(200).send({ status: "success", message: "Título modificado" })
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error })         
+    }
+}
+
 const deleteCategory = async (req: Request, res: Response) => { // En /api/notes/category/:id con el método DELETE, borra la categoria con el id del params
     try {
         const { id } = req.params
@@ -106,6 +125,7 @@ export default {
     getAllNotesById,
     saveOneCategory,
     saveOneItem,
+    changeTitleCategory,
     deleteCategory,
     deleteOneItem,
 }
