@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import Swal from 'sweetalert2';
 
 export const sendToast = (type: "error" | "success" | "info", message: string, timeout = 4000) => {
     toast[type](message, {
@@ -35,20 +34,5 @@ export const sendToastUpdate = (id: number | string, type: "error" | "success", 
         progress: undefined,
         theme: "dark",
         isLoading: false
-    })
-}
-
-export const swalSeguro = async () => {
-    return await Swal.fire({
-        title: '¿Estás seguro?',
-        text: "No podrás revertirlo!",
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Si, eliminar!',
-        confirmButtonColor: '#3085d6',
-    }).then((result) => {
-        return result.isConfirmed
     })
 }

@@ -27,6 +27,20 @@ class NoteContainer {
         await this.model.updateOne({_id: id}, {$set: {...documentoActualizado}})
     }
 
+    async updateNote(id: string, idItem: string, text: string) { // Actualiza el text de una nota
+        const category = await this.model.findOne({_id: id})
+        if (!category) return null
+        
+        const newItems = category.items.map(item => {
+            if (item.itemId === idItem) {
+                item.text = text
+            }
+            return item
+        })
+    
+        return await this.model.updateOne({_id: id}, {$set: {items: newItems}})
+    }
+
     async updateTitleCategory(id: string, title: string) { // Actualiza el title de una categoria
         await this.model.updateOne({_id: id}, {$set: {title}})    
     }

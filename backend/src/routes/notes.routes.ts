@@ -7,6 +7,8 @@ router.post("/category/:id", notesController.saveOneCategory)
 
 router.post("/category/item/:id", notesController.saveOneItem)
 
+router.patch("/category/item/:id", notesController.changeNote)
+
 router.patch("/category/:id", notesController.changeTitleCategory)
 
 router.get("/category/:id", notesController.getAllNotesById)

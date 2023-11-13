@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { NoteType, ItemsTypes } from "../../types/note"
-import { loadingToast, sendToast, sendToastUpdate, swalSeguro } from "../../utils/toast"
+import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast"
 import disabledButton from "../../utils/disabledButton"
 import { checkLogger } from "../../utils/checkLogger"
 import getUser from "../../utils/getUser"
@@ -104,7 +104,18 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
     const deleteCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const button = e.currentTarget
 
-        const respuesta = await swalSeguro()
+        const respuesta = await Swal.fire({
+            title: '¿Estás seguro de eliminar la cateoría?',
+            text: "No podrás revertirlo!",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si, eliminar!',
+            confirmButtonColor: '#3085d6',
+        }).then((result) => {
+            return result.isConfirmed
+        })
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) return null; 
@@ -140,7 +151,18 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         
         const button = e.currentTarget
 
-        const respuesta = await swalSeguro()
+        const respuesta = await Swal.fire({
+            title: '¿Estás seguro de eliminar la nota?',
+            text: "No podrás revertirlo!",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si, eliminar!',
+            confirmButtonColor: '#3085d6',
+        }).then((result) => {
+            return result.isConfirmed
+        })
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) return null; 
@@ -247,6 +269,78 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         disabledButton(button, false)
     }
 
+    const editItem = async (e: React.MouseEvent<HTMLButtonElement>, text: string, itemId: string) => {
+        const button = e.currentTarget
+
+        disabledButton(button, true)
+
+        const { value } = await Swal.fire({
+            title: 'Editar nota',
+            input: "text",
+            inputValue: text,
+            text: `Por favor, modifique la nota a su gusto`,
+            inputValidator: (value) => {
+                if (!value) return "Coloque un valor válido!"
+            },
+            icon: 'info',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Cambiar',
+            confirmButtonColor: '#3085d6',
+        })
+
+        if (!value) {
+            return disabledButton(button, false)
+        }
+
+        const idToast = loadingToast("Espere....");
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${_id}?itemId=${itemId}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                text: value
+            }),
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
+                "Content-Type": "application/json"
+            }
+        })
+
+        const json = await res.json()
+
+        if (json.status === "success") {
+            sendToastUpdate(idToast, "success", json.message)
+            setNotas(notas =>notas.map(nota => {
+                if (nota._id === _id) {
+                    return {
+                        ...nota,
+                        items: nota.items.map(item => {
+                            if (item.itemId === itemId) {
+                                return {
+                                    ...item,
+                                    text: value
+                                }
+                            } else {
+                                return item
+                            }
+                        })
+                    }
+                } else {
+                    return nota
+                }
+            }))
+        
+        } else if (json.status === "error" && res.status !== 500) {
+            sendToastUpdate(idToast, "error", json.error)
+        
+        } else {
+            console.error("Error interno")
+        }
+        
+        disabledButton(button, false)
+    }
+
     return (
         <div className="flex flex-col border border-blue-300 p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800">
             <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
@@ -261,6 +355,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
                 items.map(item => (
                     <div key={item.itemId} className="mb-2 p-1 flex justify-between items-center bg-slate-800 text-white">
                         <p className="mr-1 w-full text-sm">{item.text}</p>
+                        <button onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
                         <button onClick={e => deleteItem(e, item.itemId)} className="w-8"><img className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
                     </div>
                 ))

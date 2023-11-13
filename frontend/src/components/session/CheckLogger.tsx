@@ -7,9 +7,8 @@ import { UserInterface } from '../../types/user';
 
 const CheckLogger = () => { // Se encarga de preguntar si el usuario está logueado, cada vez que se cambia la url
     const personalContext = useContext(PersonalContext);
-    if (!personalContext) return null
     
-    const { setUser } = personalContext;
+    const { setUser } = personalContext ? personalContext : { setUser: () => null };
 
     const [ conectado, setConectado ] = useState(false);
 
@@ -33,7 +32,7 @@ const CheckLogger = () => { // Se encarga de preguntar si el usuario está logue
                 console.clear()
             }            
         })
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps    
     }, [location]);
 
     return <></>;

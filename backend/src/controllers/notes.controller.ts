@@ -65,6 +65,26 @@ const saveOneItem = async (req: Request, res: Response) => {
     }
 }
 
+const changeNote = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { itemId } = req.query
+        const { text } = req.body  
+
+        if (!id || !itemId || !text || typeof itemId !== "string" || typeof text !== "string") {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
+        }
+
+        Note.updateNote(id, itemId, text)    
+
+        return res.status(200).send({ status: "success", message: "Nota modificada" })
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error })         
+    }
+}
+
 const changeTitleCategory = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
@@ -125,6 +145,7 @@ export default {
     getAllNotesById,
     saveOneCategory,
     saveOneItem,
+    changeNote,
     changeTitleCategory,
     deleteCategory,
     deleteOneItem,

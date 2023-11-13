@@ -6,9 +6,8 @@ import disabledButton from "../../utils/disabledButton";
 
 const Register = () => {
     const personalContext = useContext(PersonalContext);
-    if (!personalContext) return null
 
-    const { user } = personalContext
+    const { user } = personalContext ? personalContext : { user: null };
     
     const navigate = useNavigate();
 
