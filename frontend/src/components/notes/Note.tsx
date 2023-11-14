@@ -10,10 +10,11 @@ import Swal from "sweetalert2"
 const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
     const [ formOpen, setFormOpen ] = useState(false)
 
-    const noteRef = useRef<HTMLFormElement>(null)
+    const categoryRef = useRef<HTMLDivElement>(null)
+    const addNoteRef = useRef<HTMLFormElement>(null)
 
     useEffect(() => {
-        const divNote = noteRef.current
+        const divNote = addNoteRef.current
 
         if (divNote) {
             if (formOpen) {
@@ -104,6 +105,9 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
     const deleteCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const button = e.currentTarget
 
+        const divCategory = categoryRef.current
+        divCategory?.classList.add("bg-red-900")
+
         const respuesta = await Swal.fire({
             title: '¿Estás seguro de eliminar la cateoría?',
             text: "No podrás revertirlo!",
@@ -113,12 +117,13 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Si, eliminar!',
             confirmButtonColor: '#3085d6',
-        }).then((result) => {
-            return result.isConfirmed
-        })
+        }).then((result) => result.isConfirmed)
 
         const connected = await checkLogger(getUser, setUser)
-        if (!connected || !respuesta) return null; 
+        if (!connected || !respuesta) {
+            divCategory?.classList.remove("bg-red-900")
+            return null
+        }
 
         disabledButton(button, true)
         
@@ -144,13 +149,17 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             console.error("Error interno")
         }
 
+        divCategory?.classList.remove("bg-red-900")
+
         disabledButton(button, false)
     }
 
     const deleteItem = async (e: React.MouseEvent<HTMLButtonElement>, itemId: string) => {
-        
         const button = e.currentTarget
 
+        const divNote = button.parentElement
+        divNote?.classList.add("bg-red-900")
+        
         const respuesta = await Swal.fire({
             title: '¿Estás seguro de eliminar la nota?',
             text: "No podrás revertirlo!",
@@ -160,12 +169,13 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Si, eliminar!',
             confirmButtonColor: '#3085d6',
-        }).then((result) => {
-            return result.isConfirmed
-        })
+        }).then((result) => result.isConfirmed)
 
         const connected = await checkLogger(getUser, setUser)
-        if (!connected || !respuesta) return null; 
+        if (!connected || !respuesta) {
+            divNote?.classList.remove("bg-red-900")
+            return null
+        } 
 
         disabledButton(button, true)
 
@@ -205,10 +215,14 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             console.error("Error interno")
         }
 
+        divNote?.classList.remove("bg-red-900")
         disabledButton(button, false)
     }
 
     const changeTitle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const divCategory = categoryRef.current
+        divCategory?.classList.add("bg-red-900")
+        
         const button = e.currentTarget
 
         disabledButton(button, true)
@@ -216,7 +230,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         const { value } = await Swal.fire({
             title: 'Cambiar título',
             input: "text",
-            text: `Por favor, proporcione un nuevo titulo (valor anterior, ${title})`,
+            text: `Por favor, proporcione un nuevo titulo`,
+            inputValue: title,
             inputValidator: (value) => {
                 if (!value) return "Coloque un valor válido!"
             },
@@ -228,7 +243,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             confirmButtonColor: '#3085d6',
         })
 
-        if (!value) {
+        if (!value || value === title) {
+            divCategory?.classList.remove("bg-red-900")
             return disabledButton(button, false)
         }
 
@@ -266,11 +282,15 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             console.error("Error interno")
         }
 
+        divCategory?.classList.remove("bg-red-900")
         disabledButton(button, false)
     }
 
     const editItem = async (e: React.MouseEvent<HTMLButtonElement>, text: string, itemId: string) => {
         const button = e.currentTarget
+
+        const divNote = button.parentElement
+        divNote?.classList.add("bg-red-900")
 
         disabledButton(button, true)
 
@@ -290,7 +310,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             confirmButtonColor: '#3085d6',
         })
 
-        if (!value) {
+        if (!value || value === text) {
+            divNote?.classList.remove("bg-red-900")
             return disabledButton(button, false)
         }
 
@@ -338,11 +359,12 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             console.error("Error interno")
         }
         
+        divNote?.classList.remove("bg-red-900")
         disabledButton(button, false)
     }
 
     return (
-        <div className="flex flex-col border border-blue-300 p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800">
+        <div ref={categoryRef} className="flex flex-col border border-blue-300 p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800">
             <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
                 <h3 className="font-semibold text-base w-full">{title}</h3>
                 <div className="w-20 flex">
@@ -361,7 +383,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
                 ))
             }
 
-            <form ref={noteRef} onSubmit={addItem} className={`divAddCategory ${items.length !== 0 && "border-t border-black"}`}>
+            <form ref={addNoteRef} onSubmit={addItem} className={`divAddCategory ${items.length !== 0 && "border-t border-black"}`}>
                 {
                     formOpen && <AddItemForm />
                 }

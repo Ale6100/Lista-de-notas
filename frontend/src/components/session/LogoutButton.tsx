@@ -1,8 +1,12 @@
 import { UserInterface } from "../../types/user"
 import { loadingToast, sendToastUpdate } from "../../utils/toast"
 import disabledButton from "../../utils/disabledButton"
+import { useNavigate } from "react-router-dom";
 
 const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>}) => {
+    
+    const navigate = useNavigate();
+
     const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonLogout = e.currentTarget
         disabledButton(buttonLogout, true)
@@ -26,6 +30,8 @@ const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateActio
         } else {
             sendToastUpdate(idToast, "error", "Error! Intente de nuevo más tarde")
         }
+
+        navigate("/login")
         disabledButton(buttonLogout, false)
     }        
     
