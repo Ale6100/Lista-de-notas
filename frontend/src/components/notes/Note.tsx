@@ -8,6 +8,8 @@ import { UserInterface } from "../../types/user"
 import Swal from "sweetalert2"
 
 const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
+    const colorPlateadoNota = "bg-slate-800"
+    
     const [ formOpen, setFormOpen ] = useState(false)
 
     const categoryRef = useRef<HTMLDivElement>(null)
@@ -158,7 +160,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         const button = e.currentTarget
 
         const divNote = button.parentElement
-        divNote?.classList.add("bg-red-900")
+        divNote?.classList.replace(colorPlateadoNota, "bg-red-900")        
         
         const respuesta = await Swal.fire({
             title: '¿Estás seguro de eliminar la nota?',
@@ -173,7 +175,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) {
-            divNote?.classList.remove("bg-red-900")
+            divNote?.classList.replace("bg-red-900", colorPlateadoNota)
             return null
         } 
 
@@ -215,7 +217,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             console.error("Error interno")
         }
 
-        divNote?.classList.remove("bg-red-900")
+        divNote?.classList.replace("bg-red-900", colorPlateadoNota)
         disabledButton(button, false)
     }
 
@@ -290,7 +292,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         const button = e.currentTarget
 
         const divNote = button.parentElement
-        divNote?.classList.add("bg-red-900")
+        divNote?.classList.replace(colorPlateadoNota, "bg-red-900")
 
         disabledButton(button, true)
 
@@ -311,7 +313,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         })
 
         if (!value || value === text) {
-            divNote?.classList.remove("bg-red-900")
+            divNote?.classList.replace("bg-red-900", colorPlateadoNota)
             return disabledButton(button, false)
         }
 
@@ -359,7 +361,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             console.error("Error interno")
         }
         
-        divNote?.classList.remove("bg-red-900")
+        divNote?.classList.replace("bg-red-900", colorPlateadoNota)
         disabledButton(button, false)
     }
 
@@ -375,7 +377,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
 
             {
                 items.map(item => (
-                    <div key={item.itemId} className="mb-2 p-1 flex justify-between items-center bg-slate-800 text-white">
+                    <div key={item.itemId} className={"mb-2 p-1 flex justify-between items-center text-white " + colorPlateadoNota}>
                         <p className="mr-1 w-full text-sm">{item.text}</p>
                         <button onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
                         <button onClick={e => deleteItem(e, item.itemId)} className="w-8"><img className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
