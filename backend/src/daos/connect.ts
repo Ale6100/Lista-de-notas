@@ -6,7 +6,7 @@ import { waitFor } from "../utils.js";
 export default async () => {
     try {
         await mongoose.connect(config.mongo.url);
-        logger.info(`Base de mongo conectada`);        
+        logger.info(`Base de mongo conectada`);
     } catch (error) {
         logger.fatal(`${error}`);
         await waitFor(200)

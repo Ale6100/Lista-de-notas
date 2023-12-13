@@ -7,7 +7,7 @@ import { UserInterface } from '../../types/user';
 
 const CheckLogger = () => { // Se encarga de preguntar si el usuario está logueado, cada vez que se cambia la url
     const personalContext = useContext(PersonalContext);
-    
+
     const { setUser } = personalContext ? personalContext : { setUser: () => null };
 
     const [ conectado, setConectado ] = useState(false);
@@ -15,7 +15,7 @@ const CheckLogger = () => { // Se encarga de preguntar si el usuario está logue
     const location = useLocation();
 
     useEffect(() => { // Trae la información de un usuario cada vez que cambio de ruta
-        
+
         let idToast: number | string = 0
         if (!conectado) {
             idToast = loadingToast("Conectando con la base de datos, por favor espere...")
@@ -24,15 +24,15 @@ const CheckLogger = () => { // Se encarga de preguntar si el usuario está logue
         getUser()
         .then((res: UserInterface | null) => {
             setUser(res)
-            
+
         }).finally(() => {
             if (!conectado) {
                 setConectado(true);
                 sendToastUpdate(idToast, "success", "Bienvenido", 2000)
-                console.clear()
-            }            
+                // console.clear()
+            }
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
     return <></>;

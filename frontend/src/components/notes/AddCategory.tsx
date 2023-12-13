@@ -18,16 +18,16 @@ const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<Rea
         if (divNote) {
             if (formOpen) {
                 divNote.classList.remove("hidden")
-                
+
             } else {
                 divNote.classList.add("hidden")
             }
         }
     }, [formOpen])
-    
+
     const addCategory = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        
+
         const formData = new FormData(e.currentTarget)
         const button = e.currentTarget.lastChild
 
@@ -44,9 +44,9 @@ const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<Rea
             return sendToast("error", "Error interno")
         }
 
-        disabledButton(button, true)
-
         const idToast = loadingToast("Espere....");
+
+        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?._id}`, {
             method: "POST",
@@ -75,7 +75,7 @@ const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<Rea
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
             disabledButton(button, false)
-        
+
         } else {
             console.error("Error interno")
         }
@@ -103,7 +103,7 @@ const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<Rea
                 {
                     formOpen && <AddCategoryForm />
                 }
-            </form>            
+            </form>
         </div>
     )
 }

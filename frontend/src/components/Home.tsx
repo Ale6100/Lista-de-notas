@@ -13,15 +13,15 @@ import disabledButton from '../utils/disabledButton';
 import { checkLogger } from '../utils/checkLogger';
 import getUser from '../utils/getUser';
 
-const Home = () => {    
+const Home = () => {
     const personalContext = useContext(PersonalContext);
-    
+
     const { user, setUser } = personalContext ? personalContext : { user: null, setUser: () => null };
-    
+
     const [ notas, setNotas ] = useState<NoteType[]>([])
 
     useEffect(() => {
-        const traerNotas = async () => {            
+        const traerNotas = async () => {
             if (!user) return null;
 
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?._id}`, {
@@ -29,7 +29,7 @@ const Home = () => {
                 headers: {
                     Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
                 }
-            }).then(res => res.json())            
+            }).then(res => res.json())
 
             if (res.status === "success") {
 
@@ -38,7 +38,7 @@ const Home = () => {
                 ordenarCategorias(updated_notes, user.orderCategories)
 
                 setNotas(updated_notes)
-                
+
             } else if (res.status === "error") {
                 console.error("Error interno")
             }
@@ -77,10 +77,10 @@ const Home = () => {
             return sendToast("error", "Debe rellenar todos los campos")
         }
 
+        const idToast = loadingToast("Eliminando usuario...");
+
         disabledButton(buttonDelete, true)
 
-        const idToast = loadingToast("Eliminando usuario...");
-        
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/deleteUser/${user?._id}?username=${user?.username}`, {
             method: "DELETE",
             headers: {
@@ -91,14 +91,14 @@ const Home = () => {
         })
 
         const json = await res.json()
-        
+
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", json.message)
             setUser(null)
-        
+
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-        
+
         } else {
             console.error("Error interno")
         }
@@ -122,7 +122,7 @@ const Home = () => {
             {
                 notas.length > 0 && <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
             }
-            
+
             <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
                 notas.length > 0 ? notas.map(nota => (

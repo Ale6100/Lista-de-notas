@@ -10,15 +10,15 @@ const getAllNotesById = async (req: Request, res: Response) => {
 
         if (!id) {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
-            return res.status(400).send({status: "error", error: "Valores incompletos"}) 
+            return res.status(400).send({status: "error", error: "Valores incompletos"})
         }
-        
+
         const notes = await Note.getById(id)
 
-        return res.status(200).send({status: "success", payload: notes})        
+        return res.status(200).send({status: "success", payload: notes})
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({status: "error", error })        
+        return res.status(500).send({status: "error", error })
     }
 }
 
@@ -30,19 +30,19 @@ const saveOneCategory = async (req: Request, res: Response) => { // En /api/note
 
         if (!title || !id) {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
-            return res.status(400).send({status: "error", error: "Valores incompletos"}) 
+            return res.status(400).send({status: "error", error: "Valores incompletos"})
         }
 
         const timestamp = Date.now()
 
         const id_note = await Note.save({ idUser: id, title, items: [], timestamp })
-        return res.status(200).send({status: "success", payload: { id: id_note, timestamp }})
+        return res.status(201).send({status: "success", payload: { id: id_note, timestamp }})
 
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({status: "error", error })         
+        return res.status(500).send({status: "error", error })
     }
-} 
+}
 
 const saveOneItem = async (req: Request, res: Response) => {
     try {
@@ -51,17 +51,17 @@ const saveOneItem = async (req: Request, res: Response) => {
 
         if (!text || !id) {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
-            return res.status(400).send({ status: "error", error: "Valores incompletos" }) 
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
         }
 
         const idItem = randomUUID()
 
         await Note.saveItem(id, text, idItem)
-        return res.status(200).send({ status: "success", payload: idItem })
+        return res.status(201).send({ status: "success", payload: idItem })
 
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({ status: "error", error })         
+        return res.status(500).send({ status: "error", error })
     }
 }
 
@@ -69,19 +69,19 @@ const changeNote = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const { itemId } = req.query
-        const { text } = req.body  
+        const { text } = req.body
 
         if (!id || !itemId || !text || typeof itemId !== "string" || typeof text !== "string") {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
             return res.status(400).send({ status: "error", error: "Valores incompletos" })
         }
 
-        Note.updateNote(id, itemId, text)    
+        Note.updateNote(id, itemId, text)
 
         return res.status(200).send({ status: "success", message: "Nota modificada" })
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({ status: "error", error })         
+        return res.status(500).send({ status: "error", error })
     }
 }
 
@@ -100,7 +100,7 @@ const changeTitleCategory = async (req: Request, res: Response) => {
         return res.status(200).send({ status: "success", message: "Título modificado" })
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({ status: "error", error })         
+        return res.status(500).send({ status: "error", error })
     }
 }
 
@@ -110,7 +110,7 @@ const deleteCategory = async (req: Request, res: Response) => { // En /api/notes
 
         if (!id) {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
-            return res.status(400).send({ status: "error", error: "Valores incompletos" }) 
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
         }
 
         await Note.deleteById(id)
@@ -118,7 +118,7 @@ const deleteCategory = async (req: Request, res: Response) => { // En /api/notes
 
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({ status: "error", error })         
+        return res.status(500).send({ status: "error", error })
     }
 }
 
@@ -129,16 +129,16 @@ const deleteOneItem = async (req: Request, res: Response) => { // En /api/notes/
 
         if (!id || !itemId || typeof itemId !== "string") {
             req.logger.error(`${req.infoPeticion} | Incomplete values`)
-            return res.status(400).send({ status: "error", error: "Valores incompletos" }) 
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
         }
-        
+
         await Note.deleteItem(id, itemId)
         return res.status(200).send({ status: "success", message: "Nota eliminada" })
-        
+
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
-        return res.status(500).send({ status: "error", error })         
-    }        
+        return res.status(500).send({ status: "error", error })
+    }
 }
 
 export default {

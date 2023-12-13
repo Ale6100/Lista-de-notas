@@ -9,7 +9,7 @@ import Swal from "sweetalert2"
 
 const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
     const colorPlateadoNota = "bg-slate-800"
-    
+
     const [ formOpen, setFormOpen ] = useState(false)
 
     const categoryRef = useRef<HTMLDivElement>(null)
@@ -21,7 +21,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         if (divNote) {
             if (formOpen) {
                 divNote.classList.remove("hidden")
-                
+
             } else {
                 divNote.classList.add("hidden")
             }
@@ -47,9 +47,9 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             return console.error("Error interno")
         }
 
-        disabledButton(button, true)
-
         const idToast = loadingToast("Espere....");
+
+        disabledButton(button, true)
 
         const id = _id
 
@@ -88,12 +88,12 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
             disabledButton(button, false)
-        
+
         } else {
             console.error("Error interno")
         }
     }
-    
+
     const AddItemForm = () => {
         return (
             <>
@@ -127,9 +127,9 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             return null
         }
 
-        disabledButton(button, true)
-        
         const idToast = loadingToast("Espere....");
+
+        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${_id}`, {
             method: "DELETE",
@@ -143,10 +143,10 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", json.message)
             setNotas(notas => notas.filter(nota => nota._id !== _id));
-        
+
         } else if (json.status === "error" && res.status !== 500) {
-            sendToastUpdate(idToast, "error", json.error)    
-        
+            sendToastUpdate(idToast, "error", json.error)
+
         } else {
             console.error("Error interno")
         }
@@ -160,8 +160,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         const button = e.currentTarget
 
         const divNote = button.parentElement
-        divNote?.classList.replace(colorPlateadoNota, "bg-red-900")        
-        
+        divNote?.classList.replace(colorPlateadoNota, "bg-red-900")
+
         const respuesta = await Swal.fire({
             title: '¿Estás seguro de eliminar la nota?',
             text: "No podrás revertirlo!",
@@ -177,11 +177,11 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         if (!connected || !respuesta) {
             divNote?.classList.replace("bg-red-900", colorPlateadoNota)
             return null
-        } 
-
-        disabledButton(button, true)
+        }
 
         const idToast = loadingToast("Espere....");
+
+        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${_id}?itemId=${itemId}`, {
             method: "DELETE",
@@ -208,11 +208,11 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
                         return nota;
                     }
                 });
-            });            
+            });
 
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-            
+
         } else {
             console.error("Error interno")
         }
@@ -224,10 +224,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
     const changeTitle = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const divCategory = categoryRef.current
         divCategory?.classList.add("bg-red-900")
-        
-        const button = e.currentTarget
 
-        disabledButton(button, true)
+        const button = e.currentTarget
 
         const { value } = await Swal.fire({
             title: 'Cambiar título',
@@ -246,11 +244,12 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         })
 
         if (!value || value === title) {
-            divCategory?.classList.remove("bg-red-900")
-            return disabledButton(button, false)
+            return divCategory?.classList.remove("bg-red-900")
         }
 
         const idToast = loadingToast("Espere....");
+
+        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${_id}`, {
             method: "PATCH",
@@ -279,7 +278,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             }))
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-        
+
         } else {
             console.error("Error interno")
         }
@@ -293,8 +292,6 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
 
         const divNote = button.parentElement
         divNote?.classList.replace(colorPlateadoNota, "bg-red-900")
-
-        disabledButton(button, true)
 
         const { value } = await Swal.fire({
             title: 'Editar nota',
@@ -313,11 +310,12 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         })
 
         if (!value || value === text) {
-            divNote?.classList.replace("bg-red-900", colorPlateadoNota)
-            return disabledButton(button, false)
+            return divNote?.classList.replace("bg-red-900", colorPlateadoNota)
         }
 
         const idToast = loadingToast("Espere....");
+
+        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${_id}?itemId=${itemId}`, {
             method: "PATCH",
@@ -353,14 +351,14 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
                     return nota
                 }
             }))
-        
+
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-        
+
         } else {
             console.error("Error interno")
         }
-        
+
         divNote?.classList.replace("bg-red-900", colorPlateadoNota)
         disabledButton(button, false)
     }
