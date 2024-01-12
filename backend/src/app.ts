@@ -25,7 +25,7 @@ const server: http.Server = app.listen(PORT, async () => { // Escuchamos en el p
         logger.info(`Servidor escuchando en el puerto ${address.port}`);
         await connect();
     }
-}); 
+});
 server.on("error", error => logger.fatal(`${error}`))
 
 app.use(express.json()); // Especifica que podemos recibir json

@@ -368,8 +368,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
                 <h3 className="font-semibold text-base w-full">{title}</h3>
                 <div className="w-20 flex">
-                    <button onClick={changeTitle} className="mr-1"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
-                    <button onClick={deleteCategory}><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
+                    <button title="Cambiar título" onClick={changeTitle} className="mr-1"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
+                    <button title="Eliminar categoría" onClick={deleteCategory}><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
                 </div>
             </div>
 
@@ -377,8 +377,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
                 items.map(item => (
                     <div key={item.itemId} className={"mb-2 p-1 flex justify-between items-center text-white " + colorPlateadoNota}>
                         <p className="mr-1 w-full text-sm">{item.text}</p>
-                        <button onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
-                        <button onClick={e => deleteItem(e, item.itemId)} className="w-8"><img className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
+                        <button title="Editar nota" onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
+                        <button title="Eliminar nota" onClick={e => deleteItem(e, item.itemId)} className="w-8"><img className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
                     </div>
                 ))
             }

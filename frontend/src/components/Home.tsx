@@ -12,13 +12,15 @@ import { loadingToast, sendToast, sendToastUpdate } from '../utils/toast';
 import disabledButton from '../utils/disabledButton';
 import { checkLogger } from '../utils/checkLogger';
 import getUser from '../utils/getUser';
+import Loader from './Loader';
 
 const Home = () => {
     const personalContext = useContext(PersonalContext);
 
     const { user, setUser } = personalContext ? personalContext : { user: null, setUser: () => null };
 
-    const [ notas, setNotas ] = useState<NoteType[]>([])
+    const [ loadingNotes, setLoadingNotes ] = useState(true);
+    const [ notas, setNotas ] = useState<NoteType[]>([]);
 
     useEffect(() => {
         const traerNotas = async () => {
@@ -38,6 +40,7 @@ const Home = () => {
                 ordenarCategorias(updated_notes, user.orderCategories)
 
                 setNotas(updated_notes)
+                setLoadingNotes(false)
 
             } else if (res.status === "error") {
                 console.error("Error interno")
@@ -109,11 +112,11 @@ const Home = () => {
 
     return (
         <div className="px-2">
-            <div className='flex justify-between mb-2 items-center max-sm:flex-col gap-1'> 
+            <div className='flex justify-between mb-2 items-center max-sm:flex-col gap-1'>
                 <p className='self-start'>Bienvenido/a <span className='font-semibold'>{user.username}</span></p>
                 <div className='self-end'>
                     <LogoutButton setUser={setUser} />
-                    <button onClick={handleDeleteAccount} className='ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Eliminar cuenta</button>        
+                    <button onClick={handleDeleteAccount} className='ml-2 bg-red-500 hover:bg-red-700 text-slate-900 font-bold py-2 px-4 rounded'>Eliminar cuenta</button>
                 </div>
             </div>
 
@@ -125,6 +128,8 @@ const Home = () => {
 
             <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
+                loadingNotes ? <Loader/> :
+
                 notas.length > 0 ? notas.map(nota => (
                     <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser}/>
                 )) :
