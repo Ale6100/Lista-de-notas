@@ -13,9 +13,9 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null;
 
-        const orderCategories = formData.get("select")?.toString().trim() as UserInterface["orderCategories"];
+        const orderCategories_ = formData.get("select")?.toString().trim() as UserInterface["orderCategories"];
 
-        if (!orderCategories) {
+        if (!orderCategories_) {
             console.error("Error inteno");
             return sendToast("error", "Error, selecciona una opción")
         }
@@ -28,7 +28,7 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
                 Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ orderCategories })
+            body: JSON.stringify({ orderCategories: orderCategories_ })
         })
 
         const json = await res.json()
@@ -40,7 +40,7 @@ const OrderNotes = ({ orderCategories, setUser, _id }: { orderCategories: UserIn
                 } else {
                     return {
                         ...user,
-                        orderCategories
+                        orderCategories: orderCategories_
                     }
                 }
             })

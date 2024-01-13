@@ -31,6 +31,12 @@ const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<Rea
         const formData = new FormData(e.currentTarget)
         const button = e.currentTarget.lastChild
 
+        if (!(button instanceof HTMLButtonElement)) {
+            return sendToast("error", "Error interno")
+        }
+
+        disabledButton(button, true)
+
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null
 
@@ -40,13 +46,7 @@ const AddCategory = ({ setNotas, user, setUser }: { setNotas: React.Dispatch<Rea
             return sendToast("error", "Por favor, escribe un título para la nueva categoría")
         }
 
-        if (!(button instanceof HTMLButtonElement)) {
-            return sendToast("error", "Error interno")
-        }
-
         const idToast = loadingToast("Espere....");
-
-        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${user?._id}`, {
             method: "POST",

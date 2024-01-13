@@ -8,14 +8,14 @@ const Register = () => {
     const personalContext = useContext(PersonalContext);
 
     const { user } = personalContext ? personalContext : { user: null };
-    
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        
+
         const formData = new FormData(e.currentTarget)
-        
+
         const username = formData.get("register-username")?.toString().trim()
         const password = formData.get("register-password")?.toString().trim()
 

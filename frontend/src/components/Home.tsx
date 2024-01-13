@@ -13,11 +13,14 @@ import disabledButton from '../utils/disabledButton';
 import { checkLogger } from '../utils/checkLogger';
 import getUser from '../utils/getUser';
 import Loader from './Loader';
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 const Home = () => {
     const personalContext = useContext(PersonalContext);
 
     const { user, setUser } = personalContext ? personalContext : { user: null, setUser: () => null };
+
+    const [parentCategories] = useAutoAnimate();
 
     const [ loadingNotes, setLoadingNotes ] = useState(true);
     const [ notas, setNotas ] = useState<NoteType[]>([]);
@@ -37,9 +40,9 @@ const Home = () => {
 
                 const updated_notes = res.payload
 
-                ordenarCategorias(updated_notes, user.orderCategories)
+                const newOrder = ordenarCategorias(updated_notes, user.orderCategories)
 
-                setNotas(updated_notes)
+                setNotas(newOrder)
                 setLoadingNotes(false)
 
             } else if (res.status === "error") {
@@ -71,6 +74,8 @@ const Home = () => {
 
         if (!alert.isConfirmed) return null
 
+        disabledButton(buttonDelete, true)
+
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null
 
@@ -81,8 +86,6 @@ const Home = () => {
         }
 
         const idToast = loadingToast("Eliminando usuario...");
-
-        disabledButton(buttonDelete, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/deleteUser/${user?._id}?username=${user?.username}`, {
             method: "DELETE",
@@ -126,12 +129,12 @@ const Home = () => {
                 notas.length > 0 && <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
             }
 
-            <div className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
+            <div ref={parentCategories} className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
                 loadingNotes ? <Loader/> :
 
                 notas.length > 0 ? notas.map(nota => (
-                    <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser}/>
+                    <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser} orderCategories={user.orderCategories}/>
                 )) :
 
                 <p>Todavía no hay notas! agrega las que desees</p>

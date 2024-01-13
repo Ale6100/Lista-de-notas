@@ -3,7 +3,7 @@ import { NoteType } from './types/note';
 
 export const ordenarCategorias = (arrayCategorias: NoteType[], orderCategories: UserInterface["orderCategories"]) => {
     if (arrayCategorias.length === 0) return arrayCategorias
-    
+
     if (orderCategories === "alphabetic") {
         arrayCategorias.sort((a: NoteType, b: NoteType) => {
             if (a.title.toLowerCase() < b.title.toLowerCase()) {
@@ -62,9 +62,14 @@ export const ordenarCategorias = (arrayCategorias: NoteType[], orderCategories: 
             }
             return 0
         })
-    } else {        
+    } else {
         console.error("Error interno");
     }
+
+    const notasFijadas = arrayCategorias.filter((note: NoteType) => note.fixed) // Esto hará que las notas fijadas aparezcan primero
+    const notasNoFijadas = arrayCategorias.filter((note: NoteType) => !note.fixed)
+
+    arrayCategorias = [...notasFijadas, ...notasNoFijadas]
 
     return arrayCategorias
 }

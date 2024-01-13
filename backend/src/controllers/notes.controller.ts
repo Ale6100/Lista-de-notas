@@ -104,6 +104,25 @@ const changeTitleCategory = async (req: Request, res: Response) => {
     }
 }
 
+const changeFixedCategory = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { fixed } = req.body
+
+        if (!id || typeof fixed !== "boolean") {
+            req.logger.error(`${req.infoPeticion} | Incomplete values`)
+            return res.status(400).send({ status: "error", error: "Valores incompletos" })
+        }
+
+        await Note.updateFixedCategory(id, fixed)
+
+        return res.status(200).send({ status: "success", message: "Valor del fixed modificado" })
+    } catch (error) {
+        req.logger.fatal(`${req.infoPeticion} | ${error}`)
+        return res.status(500).send({ status: "error", error })
+    }
+}
+
 const deleteCategory = async (req: Request, res: Response) => { // En /api/notes/category/:id con el método DELETE, borra la categoria con el id del params
     try {
         const { id } = req.params
@@ -146,6 +165,7 @@ export default {
     saveOneCategory,
     saveOneItem,
     changeNote,
+    changeFixedCategory,
     changeTitleCategory,
     deleteCategory,
     deleteOneItem,

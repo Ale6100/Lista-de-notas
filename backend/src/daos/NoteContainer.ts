@@ -18,7 +18,7 @@ class NoteContainer {
     async saveItem(id: string, text: string, idItem: string) { // Recibe un documento, lo guarda en la colección, le coloca un id único y devuelve ese id
         await this.model.findOneAndUpdate({_id: id}, {$push: {items: {itemId: idItem, text}}})
     }
-    
+
     async getById(id: string) { // Devuelve un array con todos los documentos presentes en la colección
         return await this.model.find({ idUser: id })
     }
@@ -30,19 +30,23 @@ class NoteContainer {
     async updateNote(id: string, idItem: string, text: string) { // Actualiza el text de una nota
         const category = await this.model.findOne({_id: id})
         if (!category) return null
-        
+
         const newItems = category.items.map(item => {
             if (item.itemId === idItem) {
                 item.text = text
             }
             return item
         })
-    
+
         return await this.model.updateOne({_id: id}, {$set: {items: newItems}})
     }
 
     async updateTitleCategory(id: string, title: string) { // Actualiza el title de una categoria
-        await this.model.updateOne({_id: id}, {$set: {title}})    
+        await this.model.updateOne({_id: id}, {$set: {title}})
+    }
+
+    async updateFixedCategory (id: string, fixed: boolean) { // Actualiza el fixed de una categoria
+        await this.model.updateOne({_id: id}, {$set: {fixed}})
     }
 
     async deleteById(id: string) { // Elimina de la base de datos al documento con el id solicitado

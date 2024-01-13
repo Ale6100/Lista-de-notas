@@ -47,6 +47,7 @@ Necesitas tener previamente descargado e instalado [NodeJs](https://nodejs.org/e
 * [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 * [bcrypt](https://www.npmjs.com/package/bcrypt)
 * [winston](https://www.npmjs.com/package/winston)
+* [AutoAnimate](https://auto-animate.formkit.com/)
 
 ## Autor ✒️
 

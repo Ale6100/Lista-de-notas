@@ -7,5 +7,6 @@ export interface NoteType {
     _id: string
     title: string,
     items: ItemsTypes[],
-    timestamp: number
+    timestamp: number,
+    fixed?: boolean
 }

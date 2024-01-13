@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({ // Estructura que tendrá cada documento
         type: String,
         required: true
     },
-    
+
     title: {
         type: String,
         required: true
@@ -31,6 +31,11 @@ const schema = new mongoose.Schema({ // Estructura que tendrá cada documento
     timestamp: {
         type: Number,
         required: true
+    },
+
+    fixed: {
+        type: Boolean,
+        default: false
     }
 })
 

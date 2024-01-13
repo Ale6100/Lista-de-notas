@@ -6,14 +6,18 @@ import { checkLogger } from "../../utils/checkLogger"
 import getUser from "../../utils/getUser"
 import { UserInterface } from "../../types/user"
 import Swal from "sweetalert2"
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+import { ordenarCategorias } from "../../utils"
 
-const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: string, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>> }) => {
+const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: { _id: string, title: string, fixed?: boolean, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>, orderCategories: UserInterface["orderCategories"] }) => {
     const colorPlateadoNota = "bg-slate-800"
 
     const [ formOpen, setFormOpen ] = useState(false)
 
     const categoryRef = useRef<HTMLDivElement>(null)
     const addNoteRef = useRef<HTMLFormElement>(null)
+
+    const [parentItems] = useAutoAnimate();
 
     useEffect(() => {
         const divNote = addNoteRef.current
@@ -34,6 +38,12 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         const formData = new FormData(e.currentTarget)
         const button = e.currentTarget.lastChild
 
+        if (!(button instanceof HTMLButtonElement)) {
+            return console.error("Error interno")
+        }
+
+        disabledButton(button, true)
+
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null;
 
@@ -43,13 +53,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             return sendToast("error", "Por favor, escribe una nota o cancela")
         }
 
-        if (!(button instanceof HTMLButtonElement)) {
-            return console.error("Error interno")
-        }
-
         const idToast = loadingToast("Espere....");
-
-        disabledButton(button, true)
 
         const id = _id
 
@@ -121,6 +125,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             confirmButtonColor: '#3085d6',
         }).then((result) => result.isConfirmed)
 
+        disabledButton(button, true)
+
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) {
             divCategory?.classList.remove("bg-red-900")
@@ -128,8 +134,6 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         }
 
         const idToast = loadingToast("Espere....");
-
-        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${_id}`, {
             method: "DELETE",
@@ -173,6 +177,8 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             confirmButtonColor: '#3085d6',
         }).then((result) => result.isConfirmed)
 
+        disabledButton(button, true)
+
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) {
             divNote?.classList.replace("bg-red-900", colorPlateadoNota)
@@ -180,8 +186,6 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         }
 
         const idToast = loadingToast("Espere....");
-
-        disabledButton(button, true)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${_id}?itemId=${itemId}`, {
             method: "DELETE",
@@ -247,9 +251,15 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             return divCategory?.classList.remove("bg-red-900")
         }
 
-        const idToast = loadingToast("Espere....");
-
         disabledButton(button, true)
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) {
+            divCategory?.classList.remove("bg-red-900")
+            return null
+        }
+
+        const idToast = loadingToast("Espere....");
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/${_id}`, {
             method: "PATCH",
@@ -313,9 +323,14 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
             return divNote?.classList.replace("bg-red-900", colorPlateadoNota)
         }
 
-        const idToast = loadingToast("Espere....");
-
         disabledButton(button, true)
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) {
+            return divNote?.classList.replace("bg-red-900", colorPlateadoNota)
+        }
+
+        const idToast = loadingToast("Espere....");
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/item/${_id}?itemId=${itemId}`, {
             method: "PATCH",
@@ -363,16 +378,65 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
         disabledButton(button, false)
     }
 
+    const fixCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const button = e.currentTarget
+
+        const newFixed = !fixed
+
+        disabledButton(button, true)
+
+        const connected = await checkLogger(getUser, setUser)
+        if (!connected) return null
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/category/fixed/${_id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
+            },
+            body: JSON.stringify({ fixed: newFixed })
+        })
+
+        const json = await res.json()
+
+        if (json.status === "success") {
+            setNotas(notas => {
+                const newArray = notas.map(nota => {
+                    if (nota._id === _id) {
+                        return {
+                            ...nota,
+                            fixed: newFixed
+                        };
+                    } else {
+                        return nota;
+                    }
+                });
+
+                return ordenarCategorias(newArray, orderCategories)
+            });
+
+        } else if (json.status === "error" && res.status !== 500) {
+            sendToast("error", "No se pudo fijar la categoría")
+
+        } else {
+            console.error("Error interno")
+        }
+
+        disabledButton(button, false)
+    }
+
     return (
-        <div ref={categoryRef} className="flex flex-col border border-blue-300 p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800">
+        <div ref={categoryRef} className={`flex flex-col border-2 ${fixed ? "border-red-500" : "border-blue-300"} p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800`}>
             <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
                 <h3 className="font-semibold text-base w-full">{title}</h3>
-                <div className="w-20 flex">
+                <div className="w-28 flex gap-1">
+                    <button title="Fijar categoría" onClick={fixCategory} className="mr-1"><img className="w-full" src="./img/fixText.svg" alt="Icon Fix" /></button>
                     <button title="Cambiar título" onClick={changeTitle} className="mr-1"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
                     <button title="Eliminar categoría" onClick={deleteCategory}><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
                 </div>
             </div>
 
+            <div ref={parentItems}>
             {
                 items.map(item => (
                     <div key={item.itemId} className={"mb-2 p-1 flex justify-between items-center text-white " + colorPlateadoNota}>
@@ -382,6 +446,7 @@ const Nota = ({ _id, title, items, setNotas, setUser }: { _id: string, title: st
                     </div>
                 ))
             }
+            </div>
 
             <form ref={addNoteRef} onSubmit={addItem} className={`divAddCategory ${items.length !== 0 && "border-t border-black"}`}>
                 {

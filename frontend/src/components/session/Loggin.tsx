@@ -18,7 +18,7 @@ const Loggin = () => {
 
         const username = formData.get("loggin-username")?.toString().trim();
         const password = formData.get("loggin-password")?.toString().trim();
-        
+
         if (!username || !password) {
             return sendToast("error", "Debe rellenar todos los campos")
         }
@@ -44,7 +44,7 @@ const Loggin = () => {
         })
 
         const json = await res.json()
-        
+
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", json.message)
             navigate("/")
@@ -52,7 +52,7 @@ const Loggin = () => {
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
             disabledButton(button, false)
-        
+
         } else {
             console.error("Error interno")
         }
