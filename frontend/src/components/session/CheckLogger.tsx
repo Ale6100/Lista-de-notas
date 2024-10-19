@@ -6,9 +6,7 @@ import { loadingToast, sendToastUpdate } from '../../utils/toast';
 import { UserInterface } from '../../types/user';
 
 const CheckLogger = () => { // Se encarga de preguntar si el usuario está logueado, cada vez que se cambia la url
-    const personalContext = useContext(PersonalContext);
-
-    const { setUser } = personalContext ? personalContext : { setUser: () => null };
+    const { setUser } = useContext(PersonalContext);
 
     const [ conectado, setConectado ] = useState(false);
 

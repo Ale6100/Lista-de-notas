@@ -2,12 +2,10 @@ import { useContext } from "react";
 import { PersonalContext } from "../PersonalContext";
 import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast";
 import { useNavigate, Link } from "react-router-dom";
-import disabledButton from "../../utils/disabledButton";
+import { disableButton, enableButton } from "../../utils/disabledButton";
 
 const Register = () => {
-    const personalContext = useContext(PersonalContext);
-
-    const { user } = personalContext ? personalContext : { user: null };
+    const { user } = useContext(PersonalContext);
 
     const navigate = useNavigate();
 
@@ -29,7 +27,7 @@ const Register = () => {
             return sendToast("error", "Error interno")
         }
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const idToast = loadingToast("Espere....");
 
@@ -47,16 +45,16 @@ const Register = () => {
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", "Registro exitoso! Ahora por favor logueate")
             navigate("/login")
-        
+
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-            disabledButton(button, false)
-        
+            enableButton(button)
+
         } else {
             console.error("Error interno")
         }
-    }    
-    
+    }
+
     if (user) return <h2 className='mt-8 text-center text-xl font-semibold'>Hay una sesión abierta! Si deseas loguearte con una cuenta distinta, por favor desloguéate primero</h2>
 
     return (

@@ -2,12 +2,10 @@ import { useContext } from "react";
 import { PersonalContext } from "../PersonalContext";
 import { Link, useNavigate } from "react-router-dom";
 import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast";
-import disabledButton from "../../utils/disabledButton";
+import { disableButton, enableButton } from "../../utils/disabledButton";
 
 const Loggin = () => {
-    const personalContext = useContext(PersonalContext);
-
-    const { user } = personalContext ? personalContext : { user: null };
+    const { user } = useContext(PersonalContext);
 
     const navigate = useNavigate();
 
@@ -29,7 +27,7 @@ const Loggin = () => {
             return sendToast("error", "Error interno")
         }
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const idToast = loadingToast("Espere....");
 
@@ -51,7 +49,7 @@ const Loggin = () => {
 
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-            disabledButton(button, false)
+            enableButton(button)
 
         } else {
             console.error("Error interno")

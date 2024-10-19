@@ -1,22 +1,32 @@
-import React, { createContext, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useMemo, useState } from "react";
 import { UserInterface } from "../types/user";
 
 interface PersonalContextValue {
     user: UserInterface | null;
-    setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>;
+    setUser: Dispatch<SetStateAction<UserInterface | null>>;
 }
 
-export const PersonalContext = createContext<PersonalContextValue | undefined>(undefined);
+const defaultPersonalContextValue: PersonalContextValue = {
+    user: null,
+    setUser: () => {},
+};
+
+export const PersonalContext = createContext<PersonalContextValue>(defaultPersonalContextValue);
 
 interface PersonalContextProviderProps {
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
 const PersonalContextProvider = ({ children }: PersonalContextProviderProps) => {
     const [ user, setUser ] = useState<UserInterface | null>(null); // Estado que representa al usuario actual
 
+    const value = useMemo(() => ({
+        user,
+        setUser
+    }), [user, setUser]);
+
     return (
-        <PersonalContext.Provider value={{ user, setUser }}>
+        <PersonalContext.Provider value={value}>
             {children}
         </PersonalContext.Provider>
     );

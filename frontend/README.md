@@ -1,7 +1,10 @@
+# README Frontend
+
 ## Instalación 🔧
+
 Instala las dependencias con el comando
 
-```
+```bash
 npm install
 ```
 
@@ -17,7 +20,7 @@ VITE_ACCESS_TOKEN = X # Cadena de caracteres utilizado como mecanismo de autenti
 
 Corre el proyecto con el comando
 
-```
+```bash
 npm run dev
 ```
 

@@ -1,13 +1,23 @@
 import { useEffect, useRef, useState } from "react"
 import { NoteType, ItemsTypes } from "../../types/note"
 import { loadingToast, sendToast, sendToastUpdate } from "../../utils/toast"
-import disabledButton from "../../utils/disabledButton"
+import { disableButton, enableButton } from "../../utils/disabledButton"
 import { checkLogger } from "../../utils/checkLogger"
 import getUser from "../../utils/getUser"
 import { UserInterface } from "../../types/user"
 import Swal from "sweetalert2"
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { ordenarCategorias } from "../../utils"
+
+const AddItemForm = () => {
+    return (
+        <>
+        <textarea required name="form-text" className="textareaAddItemForm shadow w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Escribe una nota"></textarea>
+
+        <button type="submit" className='w-full py-2 px-4 text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
+        </>
+    )
+}
 
 const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: { _id: string, title: string, fixed?: boolean, items: ItemsTypes[], setNotas: React.Dispatch<React.SetStateAction<NoteType[]>>, setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>, orderCategories: UserInterface["orderCategories"] }) => {
     const colorPlateadoNota = "bg-slate-800"
@@ -42,7 +52,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             return console.error("Error interno")
         }
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null;
@@ -91,21 +101,11 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
 
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
-            disabledButton(button, false)
+            enableButton(button)
 
         } else {
             console.error("Error interno")
         }
-    }
-
-    const AddItemForm = () => {
-        return (
-            <>
-            <textarea required name="form-text" className="textareaAddItemForm shadow w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Escribe una nota"></textarea>
-
-            <button type="submit" className='w-full py-2 px-4 text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
-            </>
-        )
     }
 
     const deleteCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -125,7 +125,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             confirmButtonColor: '#3085d6',
         }).then((result) => result.isConfirmed)
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) {
@@ -157,7 +157,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
 
         divCategory?.classList.remove("bg-red-900")
 
-        disabledButton(button, false)
+        enableButton(button)
     }
 
     const deleteItem = async (e: React.MouseEvent<HTMLButtonElement>, itemId: string) => {
@@ -177,7 +177,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             confirmButtonColor: '#3085d6',
         }).then((result) => result.isConfirmed)
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected || !respuesta) {
@@ -199,20 +199,15 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", json.message)
 
-            setNotas(notas => {
-                return notas.map(nota => {
-                    if (nota._id === _id) {
-                        const updatedItems = nota.items.filter(item => item.itemId !== itemId);
+            const updateNota = (nota: NoteType, itemId: string) => {
+                if (nota._id === _id) {
+                    const updatedItems = nota.items.filter(item => item.itemId !== itemId);
+                    return {...nota, items: updatedItems };
+                }
+                return nota;
+            };
 
-                        return {
-                            ...nota,
-                            items: updatedItems
-                        };
-                    } else {
-                        return nota;
-                    }
-                });
-            });
+            setNotas(notas => notas.map(nota => updateNota(nota, itemId)));
 
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
@@ -222,7 +217,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
         }
 
         divNote?.classList.replace("bg-red-900", colorPlateadoNota)
-        disabledButton(button, false)
+        enableButton(button)
     }
 
     const changeTitle = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -251,7 +246,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             return divCategory?.classList.remove("bg-red-900")
         }
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected) {
@@ -294,7 +289,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
         }
 
         divCategory?.classList.remove("bg-red-900")
-        disabledButton(button, false)
+        enableButton(button)
     }
 
     const editItem = async (e: React.MouseEvent<HTMLButtonElement>, text: string, itemId: string) => {
@@ -323,7 +318,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             return divNote?.classList.replace("bg-red-900", colorPlateadoNota)
         }
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected) {
@@ -347,25 +342,16 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
 
         if (json.status === "success") {
             sendToastUpdate(idToast, "success", json.message)
-            setNotas(notas =>notas.map(nota => {
-                if (nota._id === _id) {
-                    return {
-                        ...nota,
-                        items: nota.items.map(item => {
-                            if (item.itemId === itemId) {
-                                return {
-                                    ...item,
-                                    text: value
-                                }
-                            } else {
-                                return item
-                            }
-                        })
-                    }
-                } else {
-                    return nota
-                }
-            }))
+
+            const updateItem = (item: ItemsTypes, itemId: string, newValue: string) => {
+                return item.itemId === itemId? {...item, text: newValue } : item;
+              };
+
+            const updateNota = (nota: NoteType, _id: string, itemId: string, newValue: string) => {
+                return nota._id === _id? {...nota, items: nota.items.map(item => updateItem(item, itemId, newValue)) } : nota;
+            };
+
+            setNotas(notas => notas.map(nota => updateNota(nota, _id, itemId, value)));
 
         } else if (json.status === "error" && res.status !== 500) {
             sendToastUpdate(idToast, "error", json.error)
@@ -375,7 +361,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
         }
 
         divNote?.classList.replace("bg-red-900", colorPlateadoNota)
-        disabledButton(button, false)
+        enableButton(button)
     }
 
     const fixCategory = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -383,7 +369,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
 
         const newFixed = !fixed
 
-        disabledButton(button, true)
+        disableButton(button)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null
@@ -422,7 +408,7 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             console.error("Error interno")
         }
 
-        disabledButton(button, false)
+        enableButton(button)
     }
 
     return (
@@ -430,9 +416,9 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
             <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
                 <h3 className="font-semibold text-base w-full">{title}</h3>
                 <div className="w-28 flex gap-1">
-                    <button title="Fijar categoría" onClick={fixCategory} className="mr-1"><img className="w-full" src="./img/fixText.svg" alt="Icon Fix" /></button>
-                    <button title="Cambiar título" onClick={changeTitle} className="mr-1"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
-                    <button title="Eliminar categoría" onClick={deleteCategory}><img className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
+                    <button title="Fijar categoría" onClick={fixCategory} className="mr-1"><img loading="lazy" className="w-full" src="./img/fixText.svg" alt="Icon Fix" /></button>
+                    <button title="Cambiar título" onClick={changeTitle} className="mr-1"><img loading="lazy" className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
+                    <button title="Eliminar categoría" onClick={deleteCategory}><img loading="lazy" className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
                 </div>
             </div>
 
@@ -441,8 +427,8 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
                 items.map(item => (
                     <div key={item.itemId} className={"mb-2 p-1 flex justify-between items-center text-white " + colorPlateadoNota}>
                         <p className="mr-1 w-full text-sm">{item.text}</p>
-                        <button title="Editar nota" onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
-                        <button title="Eliminar nota" onClick={e => deleteItem(e, item.itemId)} className="w-8"><img className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
+                        <button title="Editar nota" onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img loading="lazy" className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
+                        <button title="Eliminar nota" onClick={e => deleteItem(e, item.itemId)} className="w-8"><img loading="lazy" className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
                     </div>
                 ))
             }

@@ -7,8 +7,8 @@ Al igual que en otros proyectos trato de que sea útil para mí y otras personas
 Para ver el estado actual del sitio haz click [aqui](https://lista-de-notas.netlify.app/)
 
 * Archivos README:
-    * [frontend](./frontend/README.md)
-    * [backend](./backend/README.md)
+  * [frontend](./frontend/README.md)
+  * [backend](./backend/README.md)
 
 ## Comenzando 🚀
 
@@ -21,9 +21,11 @@ Si en cambio deseas tener una copia en tu propio repositorio de GitHub puedes Fo
 Mira Despliegue para conocer cómo desplegar el proyecto.
 
 ## Pre-requisitos 📋
+
 Necesitas tener previamente descargado e instalado [NodeJs](https://nodejs.org/en)
 
 ## Instalación 🔧 y Despliegue 📦
+
 * Para la instalación y despliegue del frontend lee el [README del frontend](./frontend/README.md)
 * Para la instalación y despliegue del backend lee el [README del backend](./backend/README.md)
 
@@ -51,7 +53,7 @@ Necesitas tener previamente descargado e instalado [NodeJs](https://nodejs.org/e
 
 ## Autor ✒️
 
-| <img src="https://avatars.githubusercontent.com/u/107259761?v=4" width=50>|
-|:-:|
-| **Alejandro Portaluppi** |
-| <a href="https://github.com/Ale6100"><img src="https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white"/></a> <a href="https://www.linkedin.com/in/alejandro-portaluppi"><img src="https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white"/></a> |
+| ![Alejandro Portaluppi](https://avatars.githubusercontent.com/u/107259761?size=50)
+|:-:
+| **Alejandro Portaluppi**
+|[![GitHub](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ale6100) [![LinkedIn](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alejandro-portaluppi)

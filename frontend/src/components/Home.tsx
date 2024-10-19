@@ -9,16 +9,14 @@ import OrderNotes from './notes/OrderNotes';
 import { ordenarCategorias } from '../utils';
 import Swal from 'sweetalert2';
 import { loadingToast, sendToast, sendToastUpdate } from '../utils/toast';
-import disabledButton from '../utils/disabledButton';
+import { disableButton, enableButton } from '../utils/disabledButton';
 import { checkLogger } from '../utils/checkLogger';
 import getUser from '../utils/getUser';
 import Loader from './Loader';
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 const Home = () => {
-    const personalContext = useContext(PersonalContext);
-
-    const { user, setUser } = personalContext ? personalContext : { user: null, setUser: () => null };
+    const { user, setUser } = useContext(PersonalContext);
 
     const [parentCategories] = useAutoAnimate();
 
@@ -74,7 +72,7 @@ const Home = () => {
 
         if (!alert.isConfirmed) return null
 
-        disabledButton(buttonDelete, true)
+        disableButton(buttonDelete)
 
         const connected = await checkLogger(getUser, setUser)
         if (!connected) return null
@@ -108,10 +106,22 @@ const Home = () => {
         } else {
             console.error("Error interno")
         }
-        disabledButton(buttonDelete, false)
+        enableButton(buttonDelete)
     }
 
     if (!user) return <MessageAutenticate />
+
+    const renderContent = () => {
+        if (loadingNotes) {
+            return <Loader />;
+        } else if (notas.length > 0) {
+            return notas.map(nota => (
+                <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser} orderCategories={user.orderCategories} />
+            ));
+        } else {
+            return <p>Todavía no hay notas! agrega las que desees</p>;
+        }
+    };
 
     return (
         <div className="px-2">
@@ -131,13 +141,7 @@ const Home = () => {
 
             <div ref={parentCategories} className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
-                loadingNotes ? <Loader/> :
-
-                notas.length > 0 ? notas.map(nota => (
-                    <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser} orderCategories={user.orderCategories}/>
-                )) :
-
-                <p>Todavía no hay notas! agrega las que desees</p>
+                renderContent()
             }
             </div>
 

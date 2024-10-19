@@ -1,6 +1,6 @@
 import { UserInterface } from "../../types/user"
 import { loadingToast, sendToastUpdate } from "../../utils/toast"
-import disabledButton from "../../utils/disabledButton"
+import { disableButton, enableButton } from "../../utils/disabledButton"
 import { useNavigate } from "react-router-dom";
 
 const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserInterface | null>>}) => {
@@ -12,7 +12,7 @@ const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateActio
 
         const idToast = loadingToast("Cerrando sesión");
 
-        disabledButton(buttonLogout, true)
+        disableButton(buttonLogout)
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/logout`, {
             method: "GET",
@@ -33,7 +33,7 @@ const LogoutButton = ({ setUser }: { setUser: React.Dispatch<React.SetStateActio
         }
 
         navigate("/login")
-        disabledButton(buttonLogout, false)
+        enableButton(buttonLogout)
     }
 
     return (

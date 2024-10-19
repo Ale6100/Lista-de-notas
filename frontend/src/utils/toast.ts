@@ -4,7 +4,7 @@ export const sendToast = (type: "error" | "success" | "info", message: string, t
     toast[type](message, {
         position: "top-right",
         autoClose: timeout,
-        hideProgressBar: timeout ===  4000 ? false : true,
+        hideProgressBar: timeout !== 4000,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,

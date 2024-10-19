@@ -1,7 +1,10 @@
+# README Backend
+
 ## Instalación 🔧
+
 Instala las dependencias con el comando
 
-```
+```bash
 npm install
 ```
 
@@ -25,7 +28,7 @@ TOKEN_GRAL = X # Cadena de caracteres utilizado como mecanismo de autenticación
 
 La carpeta de trabajo es `src` y su archivo principal se ubica en [src/app.ts](src/app.ts). Realiza las modificaciones que desees y, cuando estés listo, ejecuta el siguiente comando:
 
-```
+```bash
 npm run build
 ```
 
@@ -37,10 +40,10 @@ Recomiendo eliminar o vaciar la carpeta `dist` antes de ejecutar dicho comando.
 
 Para ejecutar el proyecto compilado, utiliza el comando:
 
-```
+```bash
 npm run dev
 ```
 
 Una vez que veas los mensajes "Servidor escuchando en el puerto 8080" (puerto configurado por defecto) y "Base de mongo conectada", podrás comenzar a utilizarlo sin problemas.
 
-Asegúrate de que la parte frontend esté ejecutándose
+_Importante_: Asegúrate de que la parte frontend esté ejecutándose

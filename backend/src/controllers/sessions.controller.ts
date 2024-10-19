@@ -32,7 +32,7 @@ const register = async (req: Request, res: Response) => { // En /api/sessions/re
         }
 
         const result = await User.save(usuario)
-        return res.status(200).send({ status: "success", payload: result }) // Enviamos al id del usuario, dando por hecho que todo salió bien
+        return res.status(200).send({ status: "success", payload: result }) // Enviamos al id del usuario, dando por hecho que se registró bien
 
     } catch (error) {
         req.logger.fatal(`${req.infoPeticion} | ${error}`)
