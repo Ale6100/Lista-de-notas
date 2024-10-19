@@ -12,7 +12,6 @@ import Error404 from "./components/Error404";
 
 function App() {
     return (
-        <>
         <PersonalContextProvider>
             <BrowserRouter>
                 <div className="flex flex-col min-h-screen">
@@ -32,7 +31,6 @@ function App() {
             </BrowserRouter>
             <ToastContainer />
         </PersonalContextProvider>
-        </>
     )
 }
 

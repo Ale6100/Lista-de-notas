@@ -38,7 +38,7 @@ Recomiendo eliminar o vaciar la carpeta `dist` antes de ejecutar dicho comando.
 Para ejecutar el proyecto compilado, utiliza el comando:
 
 ```
-npm start
+npm run dev
 ```
 
 Una vez que veas los mensajes "Servidor escuchando en el puerto 8080" (puerto configurado por defecto) y "Base de mongo conectada", podrás comenzar a utilizarlo sin problemas.
