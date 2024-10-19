@@ -12,9 +12,9 @@ import { ordenarCategorias } from "../../utils"
 const AddItemForm = () => {
     return (
         <>
-        <textarea required name="form-text" className="textareaAddItemForm shadow w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Escribe una nota"></textarea>
+        <textarea required name="form-text" className="textareaAddItemForm shadow  py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Anota algo"></textarea>
 
-        <button type="submit" className='w-full py-2 px-4 text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
+        <button type="submit" className=' py-2 px-4 text-black font-semibold bg-green-500 hover:bg-green-700 active:bg-green-600'>Agregar</button>
         </>
     )
 }
@@ -412,29 +412,33 @@ const Nota = ({ _id, title, fixed, items, setNotas, setUser, orderCategories }: 
     }
 
     return (
-        <div ref={categoryRef} className={`flex flex-col border-2 ${fixed ? "border-red-500" : "border-blue-300"} p-1 rounded min-w-[200px] max-w-[256px] h-min bg-blue-800`}>
-            <div className="p-1 mb-1 border-b-2 border-black border-dashed flex justify-between items-center">
-                <h3 className="font-semibold text-base w-full">{title}</h3>
-                <div className="w-28 flex gap-1">
-                    <button title="Fijar categoría" onClick={fixCategory} className="mr-1"><img loading="lazy" className="w-full" src="./img/fixText.svg" alt="Icon Fix" /></button>
-                    <button title="Cambiar título" onClick={changeTitle} className="mr-1"><img loading="lazy" className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
-                    <button title="Eliminar categoría" onClick={deleteCategory}><img loading="lazy" className="w-full" src="./img/delete.svg" alt="Icon trash" /></button>
-                </div>
+        <div ref={categoryRef} className={`flex flex-col border-2 ${fixed ? "border-red-500" : "border-blue-300"} p-1 rounded min-w-36 max-w-72 h-min bg-blue-800`}>
+            <div className="p-1 mb-1 border-b-2 border-black border-dashed flex items-center">
+                <h3 className="font-semibold text-base break-all flex-1">{title}</h3>
+                <button title="Marcar como prioritaria" onClick={fixCategory} className="w-5 h-5">
+                    <img loading="lazy" className="w-full" src="./img/fixText.svg" alt="Icon Fix" />
+                </button>
+                <button title="Cambiar título" onClick={changeTitle} className="mx-2 w-5 h-5">
+                    <img loading="lazy" className="w-full" src="./img/editText.svg" alt="Icon Edit Text" />
+                </button>
+                <button title="Eliminar categoría" onClick={deleteCategory}>
+                    <img loading="lazy" className="w-5 h-5" src="./img/delete.svg" alt="Icon trash" />
+                </button>
             </div>
 
             <div ref={parentItems}>
             {
                 items.map(item => (
                     <div key={item.itemId} className={"mb-2 p-1 flex justify-between items-center text-white " + colorPlateadoNota}>
-                        <p className="mr-1 w-full text-sm">{item.text}</p>
-                        <button title="Editar nota" onClick={e => editItem(e, item.text, item.itemId)} className="w-8"><img loading="lazy" className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
-                        <button title="Eliminar nota" onClick={e => deleteItem(e, item.itemId)} className="w-8"><img loading="lazy" className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
+                        <p className="py-1 mr-1 flex-1 text-sm break-all">{item.text}</p>
+                        <button title="Editar nota" onClick={e => editItem(e, item.text, item.itemId)} className="w-5 h-5"><img loading="lazy" className="w-full" src="./img/editText.svg" alt="Icon Edit Text" /></button>
+                        <button title="Eliminar nota" onClick={e => deleteItem(e, item.itemId)} className="w-5 h-5"><img loading="lazy" className="w-full" src="./img/delete2.svg" alt="Icon trash" /></button>
                     </div>
                 ))
             }
             </div>
 
-            <form ref={addNoteRef} onSubmit={addItem} className={`divAddCategory ${items.length !== 0 && "border-t border-black"}`}>
+            <form ref={addNoteRef} onSubmit={addItem} className={`divAddCategory flex flex-col ${items.length !== 0 && "border-t border-black"}`}>
                 {
                     formOpen && <AddItemForm />
                 }

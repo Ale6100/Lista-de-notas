@@ -25,5 +25,5 @@
 }
 
 .textareaAddItemForm {
-    form-sizing: content;  /* Esta propiedad es nueva, no está en casi ningún navegador. Igual lo pongo sabiendo que no es un problema si tu navegador no te lo permite */
+    field-sizing: content;  /* Esta propiedad es nueva, no está en casi ningún navegador. Igual lo pongo sabiendo que no es un problema si tu navegador no te lo permite */
 }

@@ -22,6 +22,7 @@ const Home = () => {
 
     const [ loadingNotes, setLoadingNotes ] = useState(true);
     const [ notas, setNotas ] = useState<NoteType[]>([]);
+    const [ valueSearch, setValueSearch ] = useState("");
 
     useEffect(() => {
         const traerNotas = async () => {
@@ -111,11 +112,17 @@ const Home = () => {
 
     if (!user) return <MessageAutenticate />
 
-    const renderContent = () => {
+    const renderNotas = () => {
         if (loadingNotes) {
             return <Loader />;
         } else if (notas.length > 0) {
-            return notas.map(nota => (
+            return notas
+            .filter(({ title, items }) =>
+                title.toLowerCase().includes(valueSearch.toLowerCase()) ||
+                valueSearch === "" ||
+                items.some(i => i.text.toLowerCase().includes(valueSearch.toLowerCase()))
+            )
+            .map(nota => (
                 <Note key={nota._id} {...nota} setNotas={setNotas} setUser={setUser} orderCategories={user.orderCategories} />
             ));
         } else {
@@ -127,7 +134,7 @@ const Home = () => {
         <div className="px-2">
             <div className='flex justify-between mb-2 items-center max-sm:flex-col gap-1'>
                 <p className='self-start'>Bienvenido/a <span className='font-semibold'>{user.username}</span></p>
-                <div className='self-end'>
+                <div className='self-end max-sm:w-full max-sm:flex justify-between'>
                     <LogoutButton setUser={setUser} />
                     <button onClick={handleDeleteAccount} className='ml-2 bg-red-500 hover:bg-red-700 text-slate-900 font-bold py-2 px-4 rounded'>Eliminar cuenta</button>
                 </div>
@@ -139,9 +146,11 @@ const Home = () => {
                 notas.length > 0 && <OrderNotes orderCategories={user.orderCategories} setUser={setUser} _id={user._id}/>
             }
 
+            <input className='p-1 text-black placeholder-slate-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out' type="search" onChange={e => setValueSearch(e.target.value)} name="search" autoComplete='off' placeholder='Filtrar...' />
+
             <div ref={parentCategories} className='mt-5 flex flex-wrap gap-1 gap-y-5 justify-around'>
             {
-                renderContent()
+                renderNotas()
             }
             </div>
 
